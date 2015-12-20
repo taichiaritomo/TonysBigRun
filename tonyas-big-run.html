@@ -1,0 +1,61 @@
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1">-->
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+  <title>Tony's Big Run</title>
+  <link href='https://fonts.googleapis.com/css?family=Rubik:500,700,400' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+  <div id="main">
+<!--
+    <div id="sprite-wrapper">
+      <div id="sprite">
+        HELLO
+      </div>
+    </div>
+-->
+    <div id="road"></div>
+    <div id="sprite"></div>
+    <div id="stats">
+      {{> stats}}
+    </div>
+    <div id="help">?</div>
+    <div class="title"><br>BIG RUN</div>
+  </div>
+  
+  <div id="sidebar">
+    <div class="title">Achievements</div>
+    <ul>
+      {{#each achievements}}
+        {{> achievement}}
+      {{/each}} 
+    </ul>
+    <button class="miles-button">giv me free mile</button>
+  </div>
+  
+  <script src="ui.js"></script>
+</body>
+
+<template name="stats">
+  <span class="stat-desc">Total distance: </span>{{totalMiles.value}} mile{{plural totalMiles.value}}<br>
+  <span class="stat-desc">Current streak: </span>{{currentStreak.value}} week{{plural currentStreak.value}}
+</template>
+
+<template name="achievement">
+  <li>
+    {{description}}
+    {{#if unlocked}}UNLOCKED{{/if}}
+    {{#if from}}<br>From {{from}}{{/if}}
+  </li>
+<!--    <button class="delete">&times;</button>-->
+<!--    <input type="checkbox" checked="{{checked}}" class="toggle-checked"/>-->
+<!--
+    {{description}} <br>
+    {{#if unlocked}}From {{from}}{{/if}}
+  </li>
+-->
+</template>
