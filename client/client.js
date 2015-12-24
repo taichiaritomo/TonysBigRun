@@ -1,28 +1,59 @@
 // CLIENT-SIDE
 if (Meteor.isClient) {
   
-  Meteor.subscribe("stats");
+  Meteor.subscribe("stats", function() {
+//    Session.set("Total Miles", Stats.findOne({name : "total miles"}));
+    Session.set("Total Miles", 10);
+  });
   Meteor.subscribe("achievements");
   
 //  totalMiles = Stats.findOne({name : "total miles"})._id;
 //  console.log(totalMiles);
   
   Template.body.onRendered(function () {
-//    var tm = Stats.findOne({name : "total miles"});
-    
-//    var calculateNullRoad = function() {
-//      var h = $(window).height();
-//      Session.set("NullRoad Height");
-//    }
     Session.set("Window Height", $(window).height());
+    Session.set("Sprite Frame", 4);
+    
+    var resetTimer = null, 
+        animationTimer = null;
+    
+    // Reverts Sprite to default frame and cancels animations.
+    var clearSpriteFrame = function() {
+      clearTimeout(animationTimer);
+      animationTimer = null;
+      clearTimeout(animationTimer);
+      Session.set("Sprite Frame", 4); // Set to default standing
+    };
     
     $(document).scroll(function() {
-      var vertical_position = verticalPosition();
-      console.log("Vertical Position: " + vertical_position);
-//      console.log(tm);
-      var tm = Stats.findOne({name : "total miles"}).value;
-      Session.set("Sprite Mile Position", (vertical_position / MILE_PX) + (vertical_position / (MILE_PX * tm)));
-      console.log("Sprite mile position " + Session.get("Sprite Mile Position"));
+      var y = verticalPosition();
+      Session.set("Vertical Position", y);
+      var tm = Session.get("Total Miles"),
+          nrh = Session.get("Null Road Height"),
+          h = Session.get("Window Height"),
+          smp = (y / MILE_PX) + (tm > 0 ? (y / (MILE_PX * tm)) : 0); // Sprite mile position
+      var c = (tm == 0 ? 0 : (smp / tm)); // fraction of road range
+      var rr = Math.min(tm*MILE_PX, h - TOP_OFFSET - BOTTOM_OFFSET); // road range
+      if (smp >= tm)
+        Session.set("Sprite Position", "bottom: " + (BOTTOM_OFFSET + (smp - tm)*MILE_PX) + "px;");
+      else
+        Session.set("Sprite Position", "bottom: " + (BOTTOM_OFFSET + (1 - c) * rr) + "px;");
+      
+      // Animate Sprite at 300ms frame rate
+      if (smp < tm) {
+        var ss = Math.abs(checkScrollSpeed());
+        if (ss > 0) { // ignore scroll speed 0
+          clearTimeout(resetTimer);
+          resetTimer = setTimeout(clearSpriteFrame, 250);
+          if (animationTimer == null) {
+            var f = Session.get("Sprite Frame");
+            Session.set("Sprite Frame", (f+1)%4);
+            animationTimer = setTimeout(function() { animationTimer = null; }, 250);
+          }
+        }
+      } else {
+        clearSpriteFrame(); // Immediately cancel animation once sprite reaches current point
+      }
     });
     
     $(window).resize(function() {
@@ -35,31 +66,7 @@ if (Meteor.isClient) {
       var total_miles_id = Stats.findOne({name : "total miles"})._id;
       Stats.update(total_miles_id, {$inc : {value : 1}});
       Meteor.call("update");
-    }
-    
-    // Add achievement
-//    'submit .new-achievement' : function (event) {
-//      event.preventDefault(); // Prevent default browser form submit
-//      var name = event.target.name.value; // Get value from form element
-//      Achievements.insert({
-//        name : name,
-//        createdAt : new Date() // current time
-//      });
-//      event.target.name.value = ""; // clear form
-//    }
-    
-    // Complete achievement
-//    'click .toggle-checked' : function (event) {
-//      Achievements.update(this._id, {
-//        $set : {checked : !this.checked}
-//      });
-//    },
-    
-    // Delete achievement
-//    'click .delete' : function (event) {
-//      Achievements.remove(this._id);
-//    }
-    
+    }   
   });
   
   
@@ -69,14 +76,31 @@ if (Meteor.isClient) {
       return Achievements.find({}, {sort : {index : 1}});
     },
     
-    nullroadheight : function() {
-      var temp = Stats.findOne({name : "total miles"});
-      var tm = 0;
-      if (temp) {
-        tm = temp.value;
-//        tm = 0; // 0-mile testing
-      }
-      return Math.max(40, Session.get("Window Height") - LAST_MILE_OFFSET - tm * MILE_PX);
+    achClass : function(index){
+      if (index % 2 == 0)
+        return "achievement-right";
+      else
+        return "achievement-left";
+    },
+    
+    achPosition : function(unlockDist) {
+      return "top: " + (unlockDist ? unlockDist * MILE_PX : "-5000") + "px;";
+    },
+    
+    nullRoadHeight : function() {
+      var tm = Session.get("Total Miles");
+      Session.set("Null Road Height", Math.max(TOP_OFFSET, Session.get("Window Height") - BOTTOM_OFFSET - tm * MILE_PX));
+      return Session.get("Null Road Height");
+    },
+    
+    // Prevents Sprite from passing it's current mileage.
+    spritePosition : function() {
+      return Session.get("Sprite Position");
+    },
+    
+    // Animation Frame
+    spriteFrame : function() {
+      return "background-image: url('" + FRAMES[Session.get("Sprite Frame")] + "');";
     }
     
   });
@@ -86,6 +110,8 @@ if (Meteor.isClient) {
     
   });
   
+  Template.roadAchievement.helpers({
+  });
   
   Template.stats.helpers({
     totalMiles : function () {

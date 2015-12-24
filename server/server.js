@@ -91,13 +91,14 @@ Meteor.methods({
     var total_miles = Stats.findOne({name : "total miles"}).value;
     console.log("Total miles: " + total_miles);
     // UNLOCK CONDITION CODES (only update if it still has not been unlocked)
-    if (total_miles >= 1)    unlock("1st mile!",            "Name1");
-    if (total_miles >= 6)    unlock("Ran 6 miles.",         "Name2");
-    if (total_miles >= 13)   unlock("Ran 13 miles.",        "Name3");
-    if (total_miles >= 13.1) unlock("Half marathon!",       "Name4");
-    if (total_miles >= 21)   unlock("Ran 21 miles.",        "Name5");
-    if (total_miles >= 26.2) unlock("Basically a marathon.", "Name6");
-    if (total_miles >= 40)   unlock("Ran 40 miles.",        "Name7");
+    if (total_miles >= 1)    unlock("1mi",    "Name1");
+    if (total_miles >= 6)    unlock("6mi",    "Name2");
+    if (total_miles >= 13)   unlock("13mi",   "Name3");
+    if (total_miles >= 13.1) unlock("13.1mi", "Name4");
+    if (total_miles >= 21)   unlock("21mi",   "Name5");
+    if (total_miles >= 26.2) unlock("26.2mi", "Name6");
+    if (total_miles >= 40)   unlock("40mi",   "Name7");
+    if (total_miles >= 50)   unlock("50mi",   "Name8");
     // Update last update time
     Stats.update({name : "last update"}, {$set : {value : moment()}});
     // When AJAX is added, use this instead, so that all activities after the last activity are loaded?
@@ -121,13 +122,15 @@ Meteor.startup(function () {
   if (Achievements.find().count() === 0) {
     console.log("Initializing Achievements database");
     // For streak achievements, leave unlockDist : null and set when unlocked.
-    Achievements.insert({index : 0, from : null, description : "1st mile!",             condition : "1mi",    unlocked : false, unlockTime : null, unlockDist : 1,    hidden : false});
-    Achievements.insert({index : 1, from : null, description : "Ran 6 miles.",          condition : "6mi",    unlocked : false, unlockTime : null, unlockDist : 6,    hidden : false});
-    Achievements.insert({index : 2, from : null, description : "Ran 13 miles.",         condition : "13mi",   unlocked : false, unlockTime : null, unlockDist : 13,   hidden : false});
-    Achievements.insert({index : 3, from : null, description : "Half marathon!",        condition : "13.1mi", unlocked : false, unlockTime : null, unlockDist : 13.1, hidden : false});
-    Achievements.insert({index : 4, from : null, description : "Ran 21 miles.",         condition : "21mi",   unlocked : false, unlockTime : null, unlockDist : 21,   hidden : false});
-    Achievements.insert({index : 5, from : null, description : "Basically a marathon.", condition : "26.2mi", unlocked : false, unlockTime : null, unlockDist : 26.2, hidden : false});
-    Achievements.insert({index : 6, from : null, description : "Ran 40 miles.",         condition : "40mi",   unlocked : false, unlockTime : null, unlockDist : 40,   hidden : false});
+    Achievements.insert({index : 0, from : null, description : "1st mile!",                             iconImg : "first.png",     condition : "1mi",    unlocked : false, unlockTime : null, unlockDist : 1,    hidden : false});
+    Achievements.insert({index : 1, from : null, description : "Nice. (6 miles)",                       iconImg : "mail.png",      condition : "6mi",    unlocked : false, unlockTime : null, unlockDist : 6,    hidden : false});
+    Achievements.insert({index : 2, from : null, description : "Good bread. (13 miles)",                iconImg : "bread.png",     condition : "13mi",   unlocked : false, unlockTime : null, unlockDist : 13,   hidden : false});
+    Achievements.insert({index : 3, from : null, description : "Half marathon.",                        iconImg : "star.png",      condition : "13.1mi", unlocked : false, unlockTime : null, unlockDist : 13.1, hidden : false});
+    Achievements.insert({index : 4, from : null, description : "The LoL Queen don't ff@20. (21 miles)", iconImg : "lolqueen.png",  condition : "21mi",   unlocked : false, unlockTime : null, unlockDist : 21,   hidden : false});
+    Achievements.insert({index : 5, from : null, description : "Nice calves. (Basically a marathon)",   iconImg : "brolicleg.png", condition : "26.2mi", unlocked : false, unlockTime : null, unlockDist : 26.2, hidden : false});
+    Achievements.insert({index : 6, from : null, description : "You're a brick now. (40 miles)",        iconImg : "brick.png",     condition : "40mi",   unlocked : false, unlockTime : null, unlockDist : 40,   hidden : false});
+    Achievements.insert({index : 7, from : null, description : "Heart goes doki doki. (5 week streak)", iconImg : "heart.png",     condition : "5w",     unlocked : false, unlockTime : null, unlockDist : null, hidden : false});
+    Achievements.insert({index : 8, from : null, description : "NICE CALVES. (50 miles)",               iconImg : "broliccalf.png",condition : "50mi",   unlocked : false, unlockTime : null, unlockDist : 50,   hidden : false});
   }
   // Update
   Meteor.call("update");

@@ -5,20 +5,12 @@ html {
 body {
 /*  height: 100%;*/
   min-height: 100%;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Fredoka One', sans-serif;
 /*  background-color: #315481;*/
   background-repeat: no-repeat;
   background-attachment: fixed;
 /*  background-image: linear-gradient(to bottom, #87a9e0, #918e82 100%);*/
   background-image: linear-gradient(to bottom, #80afff, #d5e3ff 100%);
-
-/*
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-*/
 
   padding: 0;
   margin: 0;
@@ -92,7 +84,6 @@ body {
 
 #sprite {
   position: fixed;
-  bottom: 40px;
   margin-left: -14px;
   margin-top: -72px;
   background-image: url("tony0.png");
@@ -106,7 +97,6 @@ body {
   position: relative;
   margin: 0 auto;
   width: 80px;
-  height: 113px;
 }
 
 #nullroad::after {
@@ -128,15 +118,33 @@ body {
   position: relative;
   margin: 0 auto;
   width: 80px;
-  height: 1500px;
+  height: 3000px;
   background-image: url("tonyroad.png");
   background-size: 80px 200px;
   background-repeat: repeat-y;
 }
 
+.achievement-right {
+  background-size: 50px 50px;
+  margin-left: 100px;
+  position: absolute;
+  left: 0;
+  height: 50px;
+  width: 50px;
+}
+
+.achievement-left {
+  background-size: 50px 50px;
+  margin-left: -70px;
+  position: absolute;
+  left: 0;
+  height: 50px;
+  width: 50px;
+}
+
 #stats {
-  font-size: 10px;
-  line-height: 12px;
+  font-size: 12px;
+  line-height: 16px;
   position: fixed;
   bottom: 10px;
   text-align: right;
@@ -152,23 +160,14 @@ body {
 
 #main #help {
   opacity: 0.8;
-  font-size: 20px;
+  font-size: 24px;
   position: fixed;
   bottom: 10px;
   left: 10px;
 }
-/*
-
-#scrollbar-hider {
-  height: 100%;
-  width: 10px;
-  position: fixed;
-  top: 0;
-  background-image: linear-gradient(to bottom, #315481, #918e82 100%);
-}
-*/
 
 #sidebar {
+  box-shadow: -2px 0px 2px rgba(0, 0, 0, 0.1);
   color: #333333;
   position: fixed;
   right: 0;
@@ -181,23 +180,10 @@ body {
 }
 
 #sidebar .title {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 500;
-/*  background: rgba(255,255,255,0.5);*/
   padding: 20px 15px 15px 15px;
   position: relative;
-}
-
-#login-buttons {
-  display: block;
-}
-
-h1 {
-  font-size: 1.5em;
-  margin: 0;
-  margin-bottom: 10px;
-  display: inline-block;
-  margin-right: 1em;
 }
 
 ul {
@@ -206,46 +192,20 @@ ul {
 }
 
 li {
+  font-family: 14px;
+  opacity: 0.5;
   position: relative;
   list-style: none;
-  padding: 15px;
+  padding: 10px 15px;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
 }
 
-li .text {
-  margin-left: 10px;
+li .info {
+  float: left;
 }
 
-li.locked {
-  color: #888;
-}
-
-li.locked .text {
-  text-decoration: line-through;
-}
-
-li.private {
-  border-color: #ddd;
-}
-
-header .hide-completed {
-  float: right;
-}
-
-.toggle-private {
-  margin-left: 5px;
-}
-
-@media (max-width: 600px) {
-  li {
-    padding: 12px 15px;
-  }
-
-  .search {
-    width: 150px;
-    clear: both;
-  }
-
-  .new-task input {
-    padding-bottom: 5px;
-  }
+li.unlocked {
+  opacity: 1;
 }
