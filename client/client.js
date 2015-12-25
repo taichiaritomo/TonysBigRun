@@ -115,9 +115,6 @@ if (Meteor.isClient) {
     
   });
   
-  Template.roadAchievement.helpers({
-  });
-  
   Template.stats.helpers({
     totalMiles : function () {
       return Stats.findOne({name : "total miles"}); //reactive
