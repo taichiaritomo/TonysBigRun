@@ -36,14 +36,13 @@ if (Meteor.isClient) {
           WH = $(window).height(),
           NRH = Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX), // null road height
           STM = NRH + TM*MILE_PX + BOTTOM_OFFSET - WH;
-      console.log("Vertical position: " + VP);
-      console.log();
-      console.log("Scrolling total miles: " + STM);
+//      console.log("Vertical position: " + VP);
+//      console.log("Scrolling total miles: " + STM);
       if (VP >= STM) {
-        console.log(WH - BOTTOM_OFFSET - (VP - STM));
+//        console.log(WH - BOTTOM_OFFSET - (VP - STM));
         Session.set("Sprite Position", WH - BOTTOM_OFFSET - (VP - STM));
       } else {
-        console.log(NRH + (VP / STM)*(WH - NRH - BOTTOM_OFFSET));
+//        console.log(NRH + (VP / STM)*(WH - NRH - BOTTOM_OFFSET));
         Session.set("Sprite Position", NRH + (VP / STM)*(WH - NRH - BOTTOM_OFFSET));
       }
       
@@ -71,8 +70,36 @@ if (Meteor.isClient) {
     
     achievements : function() { 
       return Achievements.find({}, {sort : {index : 1}});
-    },
+    }
     
+//    achClass : function(index){
+//      if (index % 2 == 0)
+//        return "achievement-right";
+//      else
+//        return "achievement-left";
+//    },
+//    
+//    achPosition : function(unlockDist) {
+//      return "top: " + (unlockDist ? unlockDist * MILE_PX : "-5000") + "px;"; // hide in negative margin if not displayable on road
+//    }
+    
+//    nullRoadHeight : function() {
+//      return Session.get("Null Road Height");
+//    },
+//    
+//    // Prevents Sprite from passing it's current mileage.
+//    spritePosition : function() {
+//      return "top: " + Session.get("Sprite Position") + "px;";
+//    },
+//    
+//    // Animation Frame
+//    spriteFrame : function() {
+//      return "background-image: url('" + FRAMES[Session.get("Sprite Frame")] + "');";
+//    }
+    
+  });
+  
+  Template.graphics.helpers({
     achClass : function(index){
       if (index % 2 == 0)
         return "achievement-right";
@@ -97,7 +124,6 @@ if (Meteor.isClient) {
     spriteFrame : function() {
       return "background-image: url('" + FRAMES[Session.get("Sprite Frame")] + "');";
     }
-    
   });
   
   Template.stats.helpers({

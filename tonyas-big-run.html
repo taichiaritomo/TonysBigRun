@@ -11,14 +11,8 @@
 
 <body>
   <div id="main">
-    <div id="nullroad" style="height: {{nullRoadHeight}}px;"></div>
-    <div id="road">
-      {{#each achievements}}
-        <div class="{{achClass @index}}" style="{{achPosition this.unlockDist}} background-image: url('{{this.iconImg}}')">
-        </div>
-      {{/each}}
-    </div>
-    <div id="sprite" style="{{spritePosition}} {{spriteFrame}}"></div>
+<!-- graphics inners used to be here -->
+    {{> graphics}}
     <div id="stats">
       {{> stats}}
     </div>
@@ -38,6 +32,17 @@
   
 <!--  <script src="ui.js"></script>-->
 </body>
+
+<template name="graphics">
+  <div id="nullroad" style="height: {{nullRoadHeight}}px;"></div>
+    <div id="road">
+      {{#each achievements}}
+        <div class="{{achClass @index}}" style="{{achPosition this.unlockDist}} background-image: url('{{this.iconImg}}')">
+        </div>
+      {{/each}}
+    </div>
+  <div id="sprite" style="{{spritePosition}} {{spriteFrame}}"></div>
+</template>
 
 <template name="stats">
   <span class="stat-desc">Total distance: </span>{{totalMiles.value}} mile{{plural totalMiles.value}}<br>
