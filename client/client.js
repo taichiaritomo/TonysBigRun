@@ -6,8 +6,8 @@ if (Meteor.isClient) {
     var TM = 21; // testing Total Miles amount
     Session.set("Total Miles", TM); // testing Total Miles quantity
     var WH = $(window).height();
-//    Session.set("Null Road Height", Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX));
-    $('#nullroad').css('height', Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX));
+    Session.set("Null Road Height", Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX));
+//    $('#nullroad').css('height', Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX));
     var NRH = Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX), // null road height
         STM = NRH + TM*MILE_PX + BOTTOM_OFFSET - WH;
     window.scroll(0, STM); // scroll to current position
@@ -18,30 +18,21 @@ if (Meteor.isClient) {
 //  console.log(totalMiles);
   
   Template.body.onRendered(function () {
-//    Session.set("Sprite Frame", 4);
-    
-    var imagesPreload = function(){
-      var imgArray = FRAMES;
-      for (var i=0; i<imgArray.length; i++) {
-         (new Image()).src = imgArray[i];
-      }
-    }
-    
-    imagesPreload();
+    Session.set("Sprite Frame", 4);
     
     var resetTimer = null, 
-        animationTimer = null,
-        spriteFrame = 4;
+        animationTimer = null;
+//        spriteFrame = 4;
     
-    $("#sprite").css("background-image", "url('" + FRAMES[spriteFrame] + "')");
+//    $("#sprite").css("background-image", "url('" + FRAMES[spriteFrame] + "')");
     
     // Reverts Sprite to default frame and cancels animations.
     var clearSpriteFrame = function() {
       clearTimeout(animationTimer);
       animationTimer = null;
       clearTimeout(animationTimer);
-//      Session.set("Sprite Frame", 4); // Set to default standing
-      $("#sprite").css("background-image", "url('" + FRAMES[4] + "')");
+      Session.set("Sprite Frame", 4); // Set to default standing
+//      $("#sprite").css("background-image", "url('" + FRAMES[4] + "')");
     };
     
     $(document).scroll(function() {
@@ -54,22 +45,22 @@ if (Meteor.isClient) {
 //      console.log("Scrolling total miles: " + STM);
       if (VP >= STM) {
 //        console.log(WH - BOTTOM_OFFSET - (VP - STM));
-//        Session.set("Sprite Position", WH - BOTTOM_OFFSET - (VP - STM));
-        $('#sprite').css('top', WH - BOTTOM_OFFSET - (VP - STM));
+        Session.set("Sprite Position", WH - BOTTOM_OFFSET - (VP - STM));
+//        $('#sprite').css('top', WH - BOTTOM_OFFSET - (VP - STM));
       } else {
 //        console.log(NRH + (VP / STM)*(WH - NRH - BOTTOM_OFFSET));
-//        Session.set("Sprite Position", NRH + (VP / STM)*(WH - NRH - BOTTOM_OFFSET));
-        $('#sprite').css('top', NRH + (VP / STM)*(WH - NRH - BOTTOM_OFFSET) + 'px');
+        Session.set("Sprite Position", NRH + (VP / STM)*(WH - NRH - BOTTOM_OFFSET));
+//        $('#sprite').css('top', NRH + (VP / STM)*(WH - NRH - BOTTOM_OFFSET) + 'px');
       }
       
       if (VP < STM) {
         clearTimeout(resetTimer);
         resetTimer = setTimeout(clearSpriteFrame, 250);
         if (animationTimer == null) {
-//          var f = Session.get("Sprite Frame");
-//          Session.set("Sprite Frame", (f+1)%4);
-          spriteFrame = (spriteFrame + 1) % 4;
-          $("#sprite").css("background-image", "url('" + FRAMES[spriteFrame] + "')");
+          var f = Session.get("Sprite Frame");
+          Session.set("Sprite Frame", (f+1)%4);
+//          spriteFrame = (spriteFrame + 1) % 4;
+//          $("#sprite").css("background-image", "url('" + FRAMES[spriteFrame] + "')");
           animationTimer = setTimeout(function() { animationTimer = null; }, 250);
         }
       } else {
@@ -80,8 +71,8 @@ if (Meteor.isClient) {
     $(window).resize(function() {
       var WH = $(window).height();
       var TM = Session.get("Total Miles");
-//      Session.set("Null Road Height", Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX));
-      $('#nullroad').css('height', Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX));
+      Session.set("Null Road Height", Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX));
+//      $('#nullroad').css('height', Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX));
     });
   });
   
@@ -135,19 +126,20 @@ if (Meteor.isClient) {
     },
     
     nullRoadHeight : function() {
-//      return Session.get("Null Road Height");
-      return "";
+      return Session.get("Null Road Height");
+//      return "";
     },
     
     // Prevents Sprite from passing it's current mileage.
     spritePosition : function() {
-//      return "top: " + Session.get("Sprite Position") + "px;";
-      return "";
+      return "top: " + Session.get("Sprite Position") + "px;";
+//      return "";
     },
     
     // Animation Frame
     spriteFrame : function() {
-//      return "background-image: url('" + FRAMES[Session.get("Sprite Frame")] + "');";
+      return "background-image: url('" + FRAMES[Session.get("Sprite Frame")] + "');";
+//      return "";
     }
   });
   

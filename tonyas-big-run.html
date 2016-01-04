@@ -26,28 +26,25 @@
         {{> sidebarAchievement}}
       {{/each}} 
     </ul>
-<!--    <button class="miles-button">giv me free mile</button>-->
   </div>
-  
-<!--  <script src="ui.js"></script>-->
   <!-- PRELOAD IMAGES -->
-<!--
   <img src="tony0.png" style="display:none;" alt="" />
   <img src="tony1.png" style="display:none;" alt="" />
   <img src="tony2.png" style="display:none;" alt="" />
   <img src="tony3.png" style="display:none;" alt="" />
   <img src="tony4.png" style="display:none;" alt="" />
--->
 </body>
 
 <template name="graphics">
+  <div id="weekscale">
+  </div>
   <div id="nullroad" style="height: {{nullRoadHeight}}px;"></div>
-    <div id="road">
-      {{#each achievements}}
-        <div class="{{achClass @index}}" style="{{achPosition this.unlockDist}} background-image: url('{{this.iconImg}}')">
-        </div>
-      {{/each}}
-    </div>
+  <div id="road">
+    {{#each achievements}}
+      <div class="{{achClass @index}}" style="{{achPosition this.unlockDist}} background-image: url('{{this.iconImg}}')">
+      </div>
+    {{/each}}
+  </div>
   <div id="sprite" style="{{spritePosition}} {{spriteFrame}}"></div>
 </template>
 
