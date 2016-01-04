@@ -15,81 +15,144 @@ var unlock = function(achievement_description, name) {
 };
 
 Meteor.methods({
+  
   // Function called to update database.
   update : function() {
     // FITBIT API SYNC
-    var last_update = Stats.findOne({name : "last update"}).value;
-    var duration = moment.duration(moment().diff(last_update));
-//      var hours = duration.asHours();
-    console.log("Last update " + duration.asSeconds() + " seconds ago");
-    console.log("Updating database ... ");
-//      if (hours >= 6) {
-//      }
-
-//      HTTP.call("GET", "https://api.fitbit.com/1/user/3WSGTY/activities/list/afterDate/[base-date]/sort/asc/limit/100.json",
-//          {headers: {some: "json", stuff: 1}},
-//          function (error, result) {
-//            if (!error) {
-//              console.log(result);
-//            } else {
-//              console.log(error);
-//            }
-//          });
-
-    /*
-    // GET all activities since last_update
-    // Initiate temporary variables
-    var total_miles = Stats.findOne({name : "total miles"}).value,
-        week = Stats.findOne({name : "week"}).value,
-        week_start = MOMENT function to find Monday midnight before last_update,
-        weekly_miles = Stats.findOne({name : "weekly miles"}).value[week],
-        weekly_quota = Stats.findOne({name : "weekly quota"}).value,
-        current_streak = Stats.findOne({name : "current streak"}).value,
-        longest_streak = Stats.findOne({name : "longest streak"}).value,
-        activity_time = null;
-    for (var activity in activities) {
-      if (activity.type != "Running") continue; // skip non-running activity
-
-      var distance = activity.distance; // make sure to convert to miles
-      activity_time = activity.time;
-      var time_since_week_start = (activity_time - week_start).roundDownDays()
-
-      // If this activity is more than a week after the last one...
-      if (time_since_week_start > 7 days) {
-
-        // First, store miles from the previous week
-        Stats.update({name : "weekly miles"}, {[week] = weekly_miles});
-
-        // If the previous week was mile-full
-        if (weekly_miles >= weekly_quota) {
-          current_streak = current_streak + 1;
-          longest_streak = Math.max(current_streak, longest_streak);
-          // Update weekly quota.
-          weekly_quota = weekly_quota + (weekly_quota < 10 ? 1 : 0);
+    var last_update = moment(Stats.findOne({name : "last update"}).value);
+    // var duration = moment.duration(moment().diff(last_update));
+    // console.log("Last update " + duration.asSeconds() + " seconds ago");
+    console.log("Updating database ...");
+    
+    var updateActivities = function(access_token) {
+      // loops as long as the last update was the day before yesterday or earlier.
+      // if this condition is met then an update for every day up to yesterday will be attempted.
+      while (moment(last_update).isBefore(moment().subtract(1, 'days'), 'day')) {
+        var this_update = moment(last_update).add(1, 'days');
+        var result; // initialize HTTP request storage variable
+        
+        try {
+          result = HTTP.call("GET", "https://api.fitbit.com/1/user/3WSGTY/activities/date/" + this_update.format("YYYY-MM-DD") +".json", {headers : {"Authorization" : "Bearer " + access_token, "Accept-Language" : "en_US"}, timeout : 1000});
+        } catch (error) {
+          console.log("Error, failed to retrieve Daily Activity Summary for " + this_update.format("YYYY-MM-DD") + ". Cancelling all further updates until next attempt.");
+          console.log(error);
+          return; // don't try the rest of the updates, or else we risk skipping an update.
         }
-        else { // reset streak
-          current_streak = 0; 
+        
+        if (result) { // if request was successful
+          var runDistance;
+          var day_of_the_week = Stats.findOne({name : "day of the week"}).value,
+              week            = Stats.findOne({name : "week"}).value,
+              weekly_miles    = Stats.findOne({name : "weekly miles"}).value,
+              weekly_quota    = Stats.findOne({name : "weekly quota"}).value,
+              current_streak  = Stats.findOne({name : "current streak"}).value;
+          day_of_the_week = day_of_the_week + 1;
+          if (day_of_the_week == 7) { // Start new week
+            // Streak processing for previous week
+            if (weekly_miles[week] >= weekly_quota) { // Quota met
+              current_streak = current_streak + 1;
+              weekly_quota = Math.min(weekly_quota + 1, 10);
+            } else { // Quota not met
+              current_streak = 0;
+              weekly_quota = 6;
+            }
+            day_of_the_week = 0; // Reset to Monday
+            week = week + 1; // start new week
+            console.log("WEEK " + week);
+            weekly_miles[week] = 0; // initialize mileage entry for new week
+          }
+          var todaysRun = _.find(result.data.summary.distances, function(d) {return d.activity == "Run"}); // find distance entry for running activities
+          if (todaysRun) { // if running activity exists for this day
+            runDistance = todaysRun.distance;
+            console.log("Running distance for date " + this_update.format("YYYY-MM-DD") + ": " + runDistance + ", This week so far: " + weekly_miles[week]);
+            // process todaysRun!
+            weekly_miles[week] = weekly_miles[week] + runDistance; // add run distance to this week
+            Stats.update({name : "total miles"},  {$inc : {value : runDistance}}); // add run distance to total miles
+          } else {
+            console.log("No running activity recorded for " + this_update.format("YYYY-MM-DD"));
+          }
+          // Update collection
+          Stats.update({name : "day of the week"}, {$set : {value : day_of_the_week}});
+          Stats.update({name : "week"},            {$set : {value : week}});
+          Stats.update({name : "weekly miles"}, {$set : {value : weekly_miles}});
+          Stats.update({name : "weekly quota"},    {$set : {value : weekly_quota}});
+          Stats.update({name : "current streak"},  {$set : {value : current_streak}});
+          // Successful update
+          last_update = this_update;
+          Stats.update({name : "last update"}, {$set : {value : last_update.format("YYYY-MM-DD")}});
+          var current_streak = Stats.findOne({name : "current streak"}).value;
+          if (current_streak > Stats.findOne({name : "longest streak"}).value)
+            Stats.update({name : "longest streak"}, {$set : {value : current_streak}});
         }
-
-        // Start new week
-        week = week + time_since_week_start.inWeeks() // (rounded down)
-        week_start = activity.time.beginning_of_week;
-        weekly_miles = distance; 
       }
-      // If this activity is within a week of the last one...
-      else {
-        weekly_miles = weekly_miles + distance; // add new miles
+      // UPDATE SUMMARY
+      console.log("\nUpdate complete.");
+      console.log("Details: ");
+      console.log("Total miles: "    + Stats.findOne({name : "total miles"}).value);
+      console.log("Week: "           + Stats.findOne({name : "week"}).value);
+      console.log("Weekly miles: "   + Stats.findOne({name : "weekly miles"}).value);
+      console.log("Weekly quota: "   + Stats.findOne({name : "weekly quota"}).value);
+      console.log("Current streak: " + Stats.findOne({name : "current streak"}).value);
+      console.log("Longest streak: " + Stats.findOne({name : "longest streak"}).value);
+    }
+    
+    /***************************** API AUTHORIZATION PROCEDURES ************************/
+    var access_token;
+    var authorization_code = Authorization.findOne({name : "authorization code"}).value;
+    var refresh_token = Authorization.findOne({name : "refresh token"}).value;
+    // NO REFRESH TOKEN. NEED NEW AUTHORIZATION
+    if (refresh_token == "") {
+      if (authorization_code == "") { // No authorization code available
+        // SEND EMAIL TO TAICHIARITOMO@GMAIL.COM NOTIFYING THAT REAUTHORIZATION IS REQUIRED FOR UPDATES
+        console.log("New authorization code required! Use Authorization.html to generate a new code, update the authorization code document in the Authorization Collection, and update server within 10 minutes.");
+        return;
+      }
+      else { // Authorization code available! Send new Access Token Request
+        HTTP.call("POST", "https://api.fitbit.com/oauth2/token", { headers : { "Authorization" : "Basic MjI5WEdLOmQyMWNmODNjYzk3NmQ3OTBkZTg3YzBiNzg4NWM4NWZm", "Content-Type" : "application/x-www-form-urlencoded" }, content : "grant_type=authorization_code&client_id=229XGK&code=" + authorization_code },
+          function (error, result) {
+            if (!error) { // save tokens
+              console.log(result);
+              access_token = result.data.access_token;
+              refresh_token = result.data.refresh_token;
+              Authorization.update({name : "refresh token"}, {$set : {value : refresh_token}});
+              Authorization.update({name : "authorization code"}, {$set : {value : ""}}); // reset authorization code
+              console.log("\nNEW ACCESS TOKEN SUCCESS");
+              console.log("Access token: " + access_token);
+              console.log("Refresh token: " + refresh_token);
+              console.log("Refresh token from database: " + Authorization.findOne({name : "refresh token"}).value);
+              
+              updateActivities(access_token); // UPDATE ACTIVITIES
+            } else {
+              console.log("\nNEW ACCESS TOKEN ERROR. Authorization code reset.");
+              Authorization.update({name : "authorization code"}, {$set : {value : ""}});
+              console.log(error);
+            }
+        });
       }
     }
-    // Update changes to database.
-    var now = moment();
-    var this_week = week + now - 
-    Stats.update({name : "week"}, {$inc {week : 
-    */
-    // Count miles in week intervals. To simplify for everyone, weeks reset on Monday.
-    // Update longest streak as we go. Evaluate streaks by quota.
+    // REFRESH TOKEN AVAILABLE
+    else { // Send Refresh Token Request to obtain a new Access Token and Refresh Token
+      HTTP.call("POST", "https://api.fitbit.com/oauth2/token", { headers : { "Authorization" : "Basic MjI5WEdLOmQyMWNmODNjYzk3NmQ3OTBkZTg3YzBiNzg4NWM4NWZm", "Content-Type" : "application/x-www-form-urlencoded" }, content : "grant_type=refresh_token&refresh_token=" + refresh_token },
+      function (error, result) {
+        if (!error) {
+          access_token = result.data.access_token;
+          refresh_token = result.data.refresh_token;
+          Authorization.update({name : "refresh token"}, {$set : {value : refresh_token}});
+          console.log("\nREFRESH TOKEN SUCCESS");
+          
+          updateActivities(access_token); // UPDATE ACTIVITIES
+        } else {
+          console.log("\nREFRESH TOKEN ERROR. Resetting Refresh Token");
+          Authorization.update({name : "refresh token"}, {$set : {value : ""}});
+          console.log(error);
+        }
+      });
+    }
+    
+    /**************************** UNLOCK ACHIEVEMENTS **************************/
     var total_miles = Stats.findOne({name : "total miles"}).value;
-    console.log("Total miles: " + total_miles);
+    var longest_streak = Stats.findOne({name : "longest streak"}).value;
+    
     // UNLOCK CONDITION CODES (only update if it still has not been unlocked)
     if (total_miles >= 1)    unlock("1mi",    "Name1");
     if (total_miles >= 6)    unlock("6mi",    "Name2");
@@ -99,10 +162,8 @@ Meteor.methods({
     if (total_miles >= 26.2) unlock("26.2mi", "Name6");
     if (total_miles >= 40)   unlock("40mi",   "Name7");
     if (total_miles >= 50)   unlock("50mi",   "Name8");
-    // Update last update time
-    Stats.update({name : "last update"}, {$set : {value : moment()}});
-    // When AJAX is added, use this instead, so that all activities after the last activity are loaded?
-    // Stats.update({name : "last update"}, {$set : {value : activity_time() + 1 second}});
+    
+    if (longest_streak >= 5)  unlock("5w", "Name9");
   }
 });
 
@@ -110,13 +171,14 @@ Meteor.startup(function () {
   // Initialize Stats
   if (Stats.find().count() === 0) {
     console.log("Initializing Stats database");
-    Stats.insert({name : "total miles",    value : 0,    type : "miles"});
-    Stats.insert({name : "week",           value : 1,    type : "weeks"});
-    Stats.insert({name : "weekly miles",   value : [0],  type : "array of miles"});
-    Stats.insert({name : "weekly quota",   value : 6,    type : "miles"});
-    Stats.insert({name : "current streak", value : 0,    type : "weeks"});
-    Stats.insert({name : "longest streak", value : 0,    type : "weeks"});
-    Stats.insert({name : "last update",    value : null, type : "date"});
+    Stats.insert({name : "total miles",     value : 0,            type : "miles"});
+    Stats.insert({name : "week",            value : 1,            type : "weeks"});
+    Stats.insert({name : "weekly miles",    value : [0, 0],       type : "array of miles"});
+    Stats.insert({name : "weekly quota",    value : 6,            type : "miles"});
+    Stats.insert({name : "current streak",  value : 0,            type : "weeks"});
+    Stats.insert({name : "longest streak",  value : 0,            type : "weeks"});
+    Stats.insert({name : "day of the week", value : 0,            type : "integer"}); // 0 = Monday ... 6 = Sunday
+    Stats.insert({name : "last update",     value : "2015-12-14", type : "date"});
   }
   // Initialize Achievements
   if (Achievements.find().count() === 0) {
@@ -132,6 +194,18 @@ Meteor.startup(function () {
     Achievements.insert({index : 7, from : null, description : "Heart goes doki doki. (5 week streak)", iconImg : "heart.png",     condition : "5w",     unlocked : false, unlockTime : null, unlockDist : null, hidden : false});
     Achievements.insert({index : 8, from : null, description : "NICE CALVES. (50 miles)",               iconImg : "broliccalf.png",condition : "50mi",   unlocked : false, unlockTime : null, unlockDist : 50,   hidden : false});
   }
-  // Update
-  Meteor.call("update");
+  // Initialize Authorization
+  if (Authorization.find().count() === 0) {
+    console.log("Initializing Authorization Data");
+    Authorization.insert({name : "authorization code", value : ""});
+    Authorization.insert({name : "refresh token", value : ""});
+  }
+  
+  // Update is only called during Startup because Heroku process restarts it periodically.
+  var last_update = moment(Stats.findOne({name : "last update"}).value);
+  var duration = moment.duration(moment().diff(last_update));
+  console.log("Last update: " + last_update + ". " + duration.asDays() + " days ago.");
+  if (duration.asDays() > 1) {
+    Meteor.call("update");
+  }
 });

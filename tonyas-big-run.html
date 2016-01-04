@@ -11,7 +11,7 @@
 
 <body>
   <div id="main">
-    <div id="nullroad" style="height: {{nullRoadHeight}}px;">{{nullRoadHeight}}</div>
+    <div id="nullroad" style="height: {{nullRoadHeight}}px;"></div>
     <div id="road">
       {{#each achievements}}
         <div class="{{achClass @index}}" style="{{achPosition this.unlockDist}} background-image: url('{{this.iconImg}}')">
@@ -46,12 +46,15 @@
 
 <template name="sidebarAchievement">
   <li class="{{#if unlocked}}unlocked{{/if}}">
-    <div style="float: left; height: 50px; width: 50px; margin-right: 10px;">
-      <img style="height: 50px; width: 50px;" src="{{iconImg}}"/>
+    <img style="float: left; height: 50px; width: 50px;" src="{{iconImg}}"/>
+    <div style="float: left; margin-left: 10px;">
+      <div class="info">
+        <div>
+          {{description}}
+        {{#if unlocked}}UNLOCKED{{/if}}
+        {{#if from}}<br>From {{from}}{{/if}}
+        </div>
+      </div>
     </div>
-    <div class="info"></div>
-    {{description}}
-    {{#if unlocked}}UNLOCKED{{/if}}
-    {{#if from}}<br>From {{from}}{{/if}}
   </li>
 </template>
