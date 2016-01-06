@@ -2,7 +2,7 @@
 if (Meteor.isClient) {
   
   Meteor.subscribe("stats", function() {
-//    var tm = Stats.findOne({name : "total miles"});
+//    var TM = Stats.findOne({name : "total miles"});
     var TM = 21; // testing Total Miles amount
     Session.set("Total Miles", TM); // testing Total Miles quantity
     var WH = $(window).height();
@@ -17,12 +17,11 @@ if (Meteor.isClient) {
 //  totalMiles = Stats.findOne({name : "total miles"})._id;
 //  console.log(totalMiles);
   
-  Template.body.onRendered(function () {
+  Template.body.onCreated(function() {
     Session.set("Sprite Frame", 4);
     
     var resetTimer = null, 
         animationTimer = null;
-//        spriteFrame = 4;
     
 //    $("#sprite").css("background-image", "url('" + FRAMES[spriteFrame] + "')");
     
@@ -76,45 +75,16 @@ if (Meteor.isClient) {
     });
   });
   
+  Template.body.onRendered(function () {
+  });
+  
   Template.body.helpers({
     
     achievements : function() { 
       return Achievements.find({}, {sort : {index : 1}});
-    }
-    
-//    achClass : function(index){
-//      if (index % 2 == 0)
-//        return "achievement-right";
-//      else
-//        return "achievement-left";
-//    },
-//    
-//    achPosition : function(unlockDist) {
-//      return "top: " + (unlockDist ? unlockDist * MILE_PX : "-5000") + "px;"; // hide in negative margin if not displayable on road
-//    }
-    
-//    nullRoadHeight : function() {
-//      return Session.get("Null Road Height");
-//    },
-//    
-//    // Prevents Sprite from passing it's current mileage.
-//    spritePosition : function() {
-//      return "top: " + Session.get("Sprite Position") + "px;";
-//    },
-//    
-//    // Animation Frame
-//    spriteFrame : function() {
-//      return "background-image: url('" + FRAMES[Session.get("Sprite Frame")] + "');";
-//    }
-    
-  });
-  
-  Template.graphics.helpers({
-    achievements : function() { 
-      return Achievements.find({}, {sort : {index : 1}});
     },
     
-    achClass : function(index){
+    achClass : function(index) {
       if (index % 2 == 0)
         return "achievement-right";
       else
@@ -141,6 +111,10 @@ if (Meteor.isClient) {
       return "background-image: url('" + FRAMES[Session.get("Sprite Frame")] + "');";
 //      return "";
     }
+    
+  });
+  
+  Template.weekmarker.helpers({
   });
   
   Template.stats.helpers({

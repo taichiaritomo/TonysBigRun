@@ -3,6 +3,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <!--  <meta name="viewport" content="width=device-width, initial-scale=1">-->
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+  <meta name="description" content="Follow your boy Tony-ya on his journey to fitness!" />
   <title>Tony's Big Run</title>
   <link href='https://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
@@ -10,13 +11,46 @@
 
 <body>
   <div id="main">
-<!-- graphics inners used to be here -->
-    {{> graphics}}
-    <div id="stats">
-      {{> stats}}
+    <!-- dynamically sized -->
+    <div id="nullroad" style="height: {{nullRoadHeight}}px;"></div>
+    
+    <div id="activesection" style="position: relative">
+      <div id="road">
+        {{#each achievements}}
+          <div class="{{achClass @index}}" style="{{achPosition this.unlockDist}} background-image: url('icons/{{this.iconImg}}')"></div>
+        {{/each}}
+      </div>
+<!--
+      <div id="weekmarkers"> week markers rendered inside here via Blaze </div>
+      <div id="weekmarkers-cover"></div>
+-->
     </div>
-    <div id="help">?</div>
-    <div class="title">TONY's<br>BIG RUN</div>
+    
+    <!-- Fixed positioned elements -->
+    <div id="sprite" style="{{spritePosition}} {{spriteFrame}}"></div>
+    <div class="title">
+      TONY's<br>BIG RUN<br>
+      <span id="version">v.1</span>
+    </div>
+    <div id="stats">{{> stats}}</div>
+    <div id="help-button">?</div>
+    <div id="help-close">×</div>
+    <div id="help-screen" class="hidden">
+      <div id="help-dialog">
+        <p>
+          Follow your boy Tony-ya on his journey to fitness. As he runs and earns
+          achievements, he'll unlock secret personal gifts from old and new 
+          friends...what they are and who they're from, he must run to find out!
+          <br><br><br>
+          <span style="color: #CCCCCC;">
+            Powered by Fitbit and Meteor
+            <br><br>
+            Designed and built by Lawrence Wu, Taichi Aritomo, and Tae Hyun Park
+            for their dear friend Tony Sheng.
+          </span>
+        </p>
+      </div>
+    </div>
   </div>
   
   <div id="sidebar">
@@ -27,6 +61,9 @@
       {{/each}} 
     </ul>
   </div>
+  
+  <script src="UI.js"></script>
+  
   <!-- PRELOAD IMAGES -->
   <img src="tony0.png" style="display:none;" alt="" />
   <img src="tony1.png" style="display:none;" alt="" />
@@ -35,33 +72,29 @@
   <img src="tony4.png" style="display:none;" alt="" />
 </body>
 
-<template name="graphics">
-  <div id="weekscale">
-  </div>
-  <div id="nullroad" style="height: {{nullRoadHeight}}px;"></div>
-  <div id="road">
-    {{#each achievements}}
-      <div class="{{achClass @index}}" style="{{achPosition this.unlockDist}} background-image: url('{{this.iconImg}}')">
-      </div>
-    {{/each}}
-  </div>
-  <div id="sprite" style="{{spritePosition}} {{spriteFrame}}"></div>
+<template name="weekmarker">
+  <div class="{{markerClass}}"></div>
+  W{{weekNumber}}-
 </template>
 
 <template name="stats">
-  <span class="stat-desc">Total distance: </span>{{totalMiles.value}} mile{{plural totalMiles.value}}<br>
-  <span class="stat-desc">Current streak: </span>{{currentStreak.value}} week{{plural currentStreak.value}}
+<!--  <span class="stat-desc">Total distance: </span>-->
+  {{totalMiles.value}} mile{{plural totalMiles.value}}<br>
+<!--  <span class="stat-desc">Current streak: </span>-->
+  {{currentStreak.value}}w streak
 </template>
 
 <template name="sidebarAchievement">
   <li class="{{#if unlocked}}unlocked{{/if}}">
-    <img style="float: left; height: 50px; width: 50px;" src="{{iconImg}}"/>
+    <img style="float: left; height: 50px; width: 50px;" src="icons/{{iconImg}}"/>
     <div style="float: left; margin-left: 10px;">
       <div class="info">
         <div>
-          {{description}}
-        {{#if unlocked}}UNLOCKED{{/if}}
-        {{#if from}}<br>From {{from}}{{/if}}
+          {{description}}<br>
+          <span style="color: gray">
+            Unlock{{#if unlocked}}ed{{/if}} at {{condition}}
+            {{#if from}}<br>From {{from}}{{/if}}
+          </span>
         </div>
       </div>
     </div>

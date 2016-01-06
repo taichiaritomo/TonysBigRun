@@ -6,11 +6,12 @@ body {
   min-height: 100%;
   font-family: 'Fredoka One', sans-serif;
 /*  background-color: #315481;*/
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+/*  background-attachment: fixed;*/
 /*  background-image: linear-gradient(to bottom, #87a9e0, #918e82 100%);*/
-/*  background-image: linear-gradient(to bottom, #80afff, #d5e3ff 100%);*/
-  background-image: linear-gradient(to bottom, #ff8f80, #ffede7 100%);
+/*  background-image: linear-gradient(to bottom, #9abdf8, #d5e3ff 100%);*/
+/*  background-repeat: no-repeat;*/
+
+  background-image: linear-gradient(to bottom, #ff8f80, #fad4c7 100%);
   padding: 0;
   margin: 0;
   font-size: 14px;
@@ -20,7 +21,7 @@ body {
     display: none; 
 }
 
-@media screen and (min-width: 0px) and (max-width: 700px) {
+@media screen and (min-width: 0px) and (max-width: 600px) {
   #main {
     width: 100%;
   }
@@ -38,7 +39,7 @@ body {
   }
 }
 
-@media screen and (min-width: 701px) {
+@media screen and (min-width: 601px) {
   #main {
     width: 60%;
     width: calc(100% - 250px);
@@ -63,31 +64,6 @@ body {
 #main {
   color: white;
   font-family: "Press Start 2P";
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-}
-
-#main .title {
-  height: 100px;
-  opacity: 0.8;
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 24px;
-  position: fixed;
-  top: 10px;
-  left: 10px;
-}
-
-#sprite {
-  position: fixed;
-  margin-left: -14px;
-  margin-top: -72px;
-  background-image: url("tony0.png");
-  background-size: 28px 72px;
-  width: 28px;
-  height: 72px;
 }
 
 #nullroad {
@@ -140,6 +116,42 @@ body {
   width: 50px;
 }
 
+#weekmarkers {
+  background: red;
+  float: right;
+  width: 50px;
+  height: 500px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+#main .title {
+  height: 100px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 4;
+}
+
+#main .title #version {
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+#sprite {
+  position: fixed;
+  margin-left: -14px;
+  margin-top: -72px;
+  background-image: url("tony0.png");
+  background-size: 28px 72px;
+  width: 28px;
+  height: 72px;
+}
+
 #stats {
   font-size: 12px;
   line-height: 16px;
@@ -156,13 +168,65 @@ body {
   display: inline;
 }
 
-#main #help {
-  opacity: 0.8;
+#main #help-button {
+  cursor: pointer;
   font-size: 24px;
   position: fixed;
   bottom: 10px;
   left: 10px;
+  z-index: 4;
+  transition: bottom 0.25s;
 }
+
+#main #help-button:active {
+  bottom: 15px;
+}
+
+#main #help-close {
+  cursor: pointer;
+  font-size: 24px;
+  position: fixed;
+  bottom: -50px;
+  left: 10px;
+  z-index: 4;
+  transition: bottom 0.25s;
+}
+
+#main #help-close:active {
+  bottom: 15px;
+}
+
+#main #help-screen {
+  visibility: visible;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background: rgba(0, 0, 0, 0.8);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 1;
+  z-index: 3;
+  transition: opacity 0.25s;
+}
+
+#main #help-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s, visibility 0.25s;
+}
+
+#main #help-dialog {
+  padding: 10px;
+  width: 100%;
+  max-width: 400px;
+  font-size: 10px;
+  line-height: 16px;
+}
+
+
 
 #sidebar {
   box-shadow: -2px 0px 2px rgba(0, 0, 0, 0.1);
@@ -196,8 +260,6 @@ li {
   list-style: none;
   padding: 10px 15px;
   min-height: 50px;
-/*  display: flex;*/
-/*  align-items: center;*/
 }
 
 li .info {
