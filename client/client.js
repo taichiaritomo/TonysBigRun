@@ -2,8 +2,8 @@
 if (Meteor.isClient) {
   
   Meteor.subscribe("stats", function() {
-//    var TM = Stats.findOne({name : "total miles"});
-    var TM = 21; // testing Total Miles amount
+    var TM = Stats.findOne({name : "total miles"}).value;
+//    var TM = 21; // testing Total Miles amount
     Session.set("Total Miles", TM); // testing Total Miles quantity
     var WH = $(window).height();
     Session.set("Null Road Height", Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX));
@@ -23,15 +23,12 @@ if (Meteor.isClient) {
     var resetTimer = null, 
         animationTimer = null;
     
-//    $("#sprite").css("background-image", "url('" + FRAMES[spriteFrame] + "')");
-    
     // Reverts Sprite to default frame and cancels animations.
     var clearSpriteFrame = function() {
       clearTimeout(animationTimer);
       animationTimer = null;
       clearTimeout(animationTimer);
       Session.set("Sprite Frame", 4); // Set to default standing
-//      $("#sprite").css("background-image", "url('" + FRAMES[4] + "')");
     };
     
     $(document).scroll(function() {
@@ -45,11 +42,9 @@ if (Meteor.isClient) {
       if (VP >= STM) {
 //        console.log(WH - BOTTOM_OFFSET - (VP - STM));
         Session.set("Sprite Position", WH - BOTTOM_OFFSET - (VP - STM));
-//        $('#sprite').css('top', WH - BOTTOM_OFFSET - (VP - STM));
       } else {
 //        console.log(NRH + (VP / STM)*(WH - NRH - BOTTOM_OFFSET));
         Session.set("Sprite Position", NRH + (VP / STM)*(WH - NRH - BOTTOM_OFFSET));
-//        $('#sprite').css('top', NRH + (VP / STM)*(WH - NRH - BOTTOM_OFFSET) + 'px');
       }
       
       if (VP < STM) {
@@ -58,8 +53,6 @@ if (Meteor.isClient) {
         if (animationTimer == null) {
           var f = Session.get("Sprite Frame");
           Session.set("Sprite Frame", (f+1)%4);
-//          spriteFrame = (spriteFrame + 1) % 4;
-//          $("#sprite").css("background-image", "url('" + FRAMES[spriteFrame] + "')");
           animationTimer = setTimeout(function() { animationTimer = null; }, 250);
         }
       } else {
@@ -71,7 +64,6 @@ if (Meteor.isClient) {
       var WH = $(window).height();
       var TM = Session.get("Total Miles");
       Session.set("Null Road Height", Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX));
-//      $('#nullroad').css('height', Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX));
     });
   });
   
@@ -97,19 +89,16 @@ if (Meteor.isClient) {
     
     nullRoadHeight : function() {
       return Session.get("Null Road Height");
-//      return "";
     },
     
     // Prevents Sprite from passing it's current mileage.
     spritePosition : function() {
       return "top: " + Session.get("Sprite Position") + "px;";
-//      return "";
     },
     
     // Animation Frame
     spriteFrame : function() {
       return "background-image: url('" + FRAMES[Session.get("Sprite Frame")] + "');";
-//      return "";
     }
     
   });
