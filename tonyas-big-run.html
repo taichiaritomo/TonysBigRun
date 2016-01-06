@@ -10,57 +10,66 @@
 </head>
 
 <body>
-  <div id="main">
-    <!-- dynamically sized -->
-    <div id="nullroad" style="height: {{nullRoadHeight}}px;"></div>
-    
-    <div id="activesection" style="position: relative">
-      <div id="road">
-        {{#each achievements}}
-          <div class="{{achClass @index}}" style="{{achPosition this.unlockDist}} background-image: url('icons/{{this.iconImg}}')"></div>
-        {{/each}}
-      </div>
 <!--
-      <div id="weekmarkers"> week markers rendered inside here via Blaze </div>
-      <div id="weekmarkers-cover"></div>
+  <div id="loading" style="{{#if loaded}}display: none{{/if}}">
+    Loading{{loadingDots}}
+    {{loadingMessage}}
+  </div>
 -->
-    </div>
-    
-    <!-- Fixed positioned elements -->
-    <div id="sprite" style="{{spritePosition}} {{spriteFrame}}"></div>
-    <div class="title">
-      TONY's<br>BIG RUN<br>
-      <span id="version">v.1</span>
-    </div>
-    <div id="stats">{{> stats}}</div>
-    <div id="help-button">?</div>
-    <div id="help-close">×</div>
-    <div id="help-screen" class="hidden">
-      <div id="help-dialog">
-        <p>
-          Follow your boy Tony-ya on his journey to fitness. As he runs and earns
-          achievements, he'll unlock secret personal gifts from old and new 
-          friends...what they are and who they're from, he must run to find out!
-          <br><br><br>
-          <span style="color: #CCCCCC;">
-            Powered by Fitbit and Meteor
-            <br><br>
-            Designed and built by Lawrence Wu, Taichi Aritomo, and Tae Hyun Park
-            for their dear friend Tony Sheng.
-          </span>
-        </p>
+  
+<!--  <div id="loaded" style="display: none; {{#if loaded}}display: block;{{/if}}">-->
+    <div id="main">
+      <!-- dynamically sized -->
+      <div id="nullroad" style="height: {{nullRoadHeight}}px;"></div>
+
+      <div id="activesection" style="position: relative">
+        <div id="road">
+          {{#each achievements}}
+            <div class="{{achClass @index}}" style="{{achPosition this.unlockDist}} background-image: url('icons/{{this.iconImg}}')"></div>
+          {{/each}}
+        </div>
+  <!--
+        <div id="weekmarkers"> week markers rendered inside here via Blaze </div>
+        <div id="weekmarkers-cover"></div>
+  -->
+      </div>
+
+      <!-- Fixed positioned elements -->
+      <div id="sprite" style="{{spritePosition}} {{spriteFrame}}"></div>
+      <div class="title">
+        TONY's<br>BIG RUN<br>
+        <span id="version">v.1</span>
+      </div>
+      <div id="stats">{{> stats}}</div>
+      <div id="help-button">?</div>
+      <div id="help-close">×</div>
+      <div id="help-screen" class="hidden">
+        <div id="help-dialog">
+          <p>
+            Follow your boy Tony-ya on his journey to fitness. As he runs and earns
+            achievements, he'll unlock secret personal gifts from old and new 
+            friends...what they are and who they're from, he must run to find out!
+            <br><br><br>
+            <span style="color: #CCCCCC;">
+              Powered by Fitbit and Meteor
+              <br><br>
+              Designed and built by Lawrence Wu, Taichi Aritomo, and Tae Hyun Park
+              for their dear friend Tony Sheng.
+            </span>
+          </p>
+        </div>
       </div>
     </div>
-  </div>
-  
-  <div id="sidebar">
-    <div class="title">Achievements</div>
-    <ul>
-      {{#each achievements}}
-        {{> sidebarAchievement}}
-      {{/each}} 
-    </ul>
-  </div>
+
+    <div id="sidebar">
+      <div class="title">Achievements</div>
+      <ul>
+        {{#each achievements}}
+          {{> sidebarAchievement}}
+        {{/each}} 
+      </ul>
+    </div>
+<!--  </div>-->
   
   <script src="UI.js"></script>
   

@@ -14,9 +14,6 @@ if (Meteor.isClient) {
   });
   Meteor.subscribe("achievements");
   
-//  totalMiles = Stats.findOne({name : "total miles"})._id;
-//  console.log(totalMiles);
-  
   Template.body.onCreated(function() {
     Session.set("Sprite Frame", 4);
     
