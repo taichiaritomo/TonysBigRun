@@ -2,16 +2,16 @@
 if (Meteor.isClient) {
   
   Meteor.subscribe("stats", function() {
-    var TM = Stats.findOne({name : "total miles"}).value;
-//    var TM = 1; // testing Total Miles amount
+    Session.set("loaded", true);
+//    var TM = Stats.findOne({name : "total miles"}).value;
+    var TM = 20; // testing Total Miles amount
     Session.set("Total Miles", TM); // testing Total Miles quantity
     var WH = $(window).height();
     Session.set("Null Road Height", Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX));
-//    $('#nullroad').css('height', Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX));
     var NRH = Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX), // null road height
         STM = NRH + TM*MILE_PX + BOTTOM_OFFSET - WH;
     console.log("STM=" + STM);
-    window.scroll(0, STM); // scroll to current position
+    window.scrollTo(0, STM); // scroll to current position
   });
   Meteor.subscribe("achievements");
   
@@ -29,7 +29,7 @@ if (Meteor.isClient) {
       Session.set("Sprite Frame", 4); // Set to default standing
     };
     
-    $(document).scroll(function() {
+    $(window).scroll(function() {
       var VP = verticalPosition(),
           TM = Session.get("Total Miles"),
           WH = $(window).height(),
@@ -65,10 +65,12 @@ if (Meteor.isClient) {
     });
   });
   
-  Template.body.onRendered(function () {
-  });
-  
   Template.body.helpers({
+    
+    loaded : function() {
+      return Session.get("loaded");
+//      return false;
+    },
     
     achievements : function() { 
       return Achievements.find({}, {sort : {index : 1}});
@@ -82,7 +84,7 @@ if (Meteor.isClient) {
     },
     
     achPosition : function(unlockDist) {
-      return "top: " + (unlockDist ? unlockDist * MILE_PX - 25 : "-5000") + "px;"; // hide in negative margin if not displayable on road
+      return "top: " + (unlockDist ? unlockDist * MILE_PX - 25 : -5000) + "px;"; // hide in negative margin if not displayable on road
     },
     
     nullRoadHeight : function() {

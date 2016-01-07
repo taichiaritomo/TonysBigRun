@@ -24,7 +24,7 @@ var update = function() {
   var updateActivities = function(access_token) {
     // loops as long as the last update was the day before yesterday or earlier.
     // if this condition is met then an update for every day up to yesterday will be attempted.
-    var user_id = Authorization.findOne({name : "user id"});
+    var user_id = Authorization.findOne({name : "user id"}).value;
 //    var user_id = "3XP9MQ";
     while (moment(last_update).isBefore(moment().subtract(1, 'days'), 'day')) {
       var this_update = moment(last_update).add(1, 'days');
@@ -166,6 +166,7 @@ var update = function() {
 }
 
 Meteor.startup(function () {
+  console.log("Running server startup...");
   // Initialize Stats
   if (Stats.find().count() === 0) {
     console.log("Initializing Stats database");
@@ -208,4 +209,5 @@ Meteor.startup(function () {
   if (duration.asDays() > 2) {
     update();
   }
+//  Meteor.setInterval(update(), 86400000);
 });
