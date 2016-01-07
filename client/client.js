@@ -3,13 +3,14 @@ if (Meteor.isClient) {
   
   Meteor.subscribe("stats", function() {
     var TM = Stats.findOne({name : "total miles"}).value;
-//    var TM = 21; // testing Total Miles amount
+//    var TM = 1; // testing Total Miles amount
     Session.set("Total Miles", TM); // testing Total Miles quantity
     var WH = $(window).height();
     Session.set("Null Road Height", Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX));
 //    $('#nullroad').css('height', Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX));
     var NRH = Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX), // null road height
         STM = NRH + TM*MILE_PX + BOTTOM_OFFSET - WH;
+    console.log("STM=" + STM);
     window.scroll(0, STM); // scroll to current position
   });
   Meteor.subscribe("achievements");
@@ -36,7 +37,7 @@ if (Meteor.isClient) {
           STM = NRH + TM*MILE_PX + BOTTOM_OFFSET - WH;
 //      console.log("Vertical position: " + VP);
 //      console.log("Scrolling total miles: " + STM);
-      if (VP >= STM) {
+      if (VP >= STM || STM == 0) {
 //        console.log(WH - BOTTOM_OFFSET - (VP - STM));
         Session.set("Sprite Position", WH - BOTTOM_OFFSET - (VP - STM));
       } else {
@@ -44,7 +45,7 @@ if (Meteor.isClient) {
         Session.set("Sprite Position", NRH + (VP / STM)*(WH - NRH - BOTTOM_OFFSET));
       }
       
-      if (VP < STM) {
+      if (VP < STM && STM != 0) {
         clearTimeout(resetTimer);
         resetTimer = setTimeout(clearSpriteFrame, 250);
         if (animationTimer == null) {

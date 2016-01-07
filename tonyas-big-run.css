@@ -187,10 +187,6 @@ body {
   transition: bottom 0.25s;
 }
 
-#main #help-button:active {
-  bottom: 15px;
-}
-
 #main #help-close {
   cursor: pointer;
   font-size: 24px;
@@ -199,10 +195,6 @@ body {
   left: 10px;
   z-index: 4;
   transition: bottom 0.25s;
-}
-
-#main #help-close:active {
-  bottom: 15px;
 }
 
 #main #help-screen {

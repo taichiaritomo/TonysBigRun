@@ -185,13 +185,13 @@ Meteor.startup(function () {
     Achievements.insert({index : 0, from : null, description : "1st mile!",                    iconImg : "first.png",     condition : "1 mile",     unlocked : false, unlockTime : null, unlockDist : 1,    hidden : false});
     Achievements.insert({index : 1, from : null, description : "You've got mail!",             iconImg : "mail.png",      condition : "6 miles",    unlocked : false, unlockTime : null, unlockDist : 6,    hidden : false});
     Achievements.insert({index : 2, from : null, description : "Half marathon.",               iconImg : "brolicarm.png", condition : "13.1 miles", unlocked : false, unlockTime : null, unlockDist : 13.1, hidden : false});
-    Achievements.insert({index : 3, from : null, description : "The LoL Queen don't ff @ 20.", iconImg : "lolqueen.png",  condition : "20.1 miles", unlocked : false, unlockTime : null, unlockDist : 21,   hidden : false});
+    Achievements.insert({index : 3, from : null, description : "The LoL Queen don't ff @ 20.", iconImg : "lolqueen.png",  condition : "20.1 miles", unlocked : false, unlockTime : null, unlockDist : 20.1,   hidden : false});
     Achievements.insert({index : 4, from : null, description : "Nice calves.",                 iconImg : "brolicleg.png", condition : "26.2 miles", unlocked : false, unlockTime : null, unlockDist : 26.2, hidden : false});
     Achievements.insert({index : 5, from : null, description : "You're a brick now.",          iconImg : "brick.png",     condition : "40 miles",   unlocked : false, unlockTime : null, unlockDist : 40,   hidden : false});
     Achievements.insert({index : 6, from : null, description : "Heart goes doki doki.",        iconImg : "heart.png",     condition : "5w streak",  unlocked : false, unlockTime : null, unlockDist : null, hidden : false});
-    Achievements.insert({index : 7, from : null, description : "Absolute.",                    iconImg : "sixpack.png",   condition : "50 miles",   unlocked : false, unlockTime : null, unlockDist : 13,   hidden : false});
-    Achievements.insert({index : 8, from : null, description : "Good bread.",                  iconImg : "bread.png",     condition : "70 miles",   unlocked : false, unlockTime : null, unlockDist : 13,   hidden : false});
-    Achievements.insert({index : 9, from : null, description : "NICE CALVES.",                 iconImg : "broliccalf.png",condition : "10w streak", unlocked : false, unlockTime : null, unlockDist : 50,   hidden : false});
+    Achievements.insert({index : 7, from : null, description : "Absolute.",                    iconImg : "sixpack.png",   condition : "50 miles",   unlocked : false, unlockTime : null, unlockDist : 50,   hidden : false});
+    Achievements.insert({index : 8, from : null, description : "Good bread.",                  iconImg : "bread.png",     condition : "70 miles",   unlocked : false, unlockTime : null, unlockDist : 70,   hidden : false});
+    Achievements.insert({index : 9, from : null, description : "NICE CALVES.",                 iconImg : "broliccalf.png",condition : "10w streak", unlocked : false, unlockTime : null, unlockDist : null,   hidden : false});
   }
   // Initialize Authorization
   if (Authorization.find().count() === 0) {
