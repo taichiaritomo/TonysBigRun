@@ -13,7 +13,7 @@
   <div id="loading" style="{{#if loaded}}display: none{{/if}}">
     <div id="loading-dialog">
       Loading<span id="loading-dots"></span><br><br>
-      <span id="loading-message">Lacing trainers...</span>
+      <span id="loading-message">Getting out of bed...</span>
     </div>
   </div>
   
@@ -24,8 +24,11 @@
 
     <div id="activesection" style="position: relative">
       <div id="road">
-        {{#each achievements}}
-          <div class="{{achClass @index}}" style="{{achPosition this.unlockDist}} background-image: url('icons/{{this.iconImg}}')"></div>
+        {{#each roadAchievements}}
+          <div class="{{achClass @index}}" style="{{achPosition this.unlockDist}} opacity: 0.5; {{#if this.unlocked}}opacity: 1;{{/if}} background-image: url('icons/{{this.iconImg}}')">
+            <span class="road-achievement-condition">{{this.condition_short}}<br></span>
+<!--            {{#if this.from}}{{this.from}}{{/if}}-->
+          </div>
         {{/each}}
       </div>
 <!--
@@ -53,7 +56,7 @@
           <span style="color: #CCCCCC;">
             Powered by Fitbit and Meteor
             <br><br>
-            Designed and built by Lawrence Wu, Taichi Aritomo, and Tae Hyun Park
+            Designed and built by Lawrence Wu, Taichi Aritomo, and TaeHyun Park
             for their dear friend Tony Sheng.
           </span>
         </p>
@@ -63,11 +66,13 @@
 
   <div id="sidebar" style="visibility: hidden; {{#if loaded}}visibility: visible;{{/if}}">
     <div class="title">Achievements</div>
-    <ul>
-      {{#each achievements}}
-        {{> sidebarAchievement}}
-      {{/each}} 
-    </ul>
+    <div id="scrolling">
+      <ul>
+        {{#each achievements}}
+          {{> sidebarAchievement}}
+        {{/each}} 
+      </ul>
+    </div>
   </div>
   
   <script src="UI.js"></script>
@@ -99,7 +104,7 @@
       <div class="info">
         <div>
           {{description}}<br>
-          <span style="color: gray">
+          <span style="color: #AAAAAA">
             Unlock{{#if unlocked}}ed{{/if}} at {{condition}}
             {{#if from}}<br>From {{from}}{{/if}}
           </span>

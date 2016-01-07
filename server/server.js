@@ -1,5 +1,5 @@
 // SERVER-SIDE
-Meteor.publish("stats", function() {
+Meteor.publish("statsDB", function() {
   return Stats.find(); // make visible all stats
 });
 
@@ -7,11 +7,12 @@ Meteor.publish("achievements", function() {
   return Achievements.find({hidden : false}); // return only unhidden achievements with "from" for only unlocked.
 });
 
-
 // Sets achievement to unlocked and assigns an unlock time.
-var unlock = function(achievement_description, name) {
-  Achievements.update({$and : [{description : achievement_description}, {unlocked : false}]},
-               {$set : {from : name, unlocked : true, unlockTime : moment()}});
+var unlock = function(achievement_condition, name, unlockDist) {
+  Achievements.update({$and : [{condition : achievement_condition}, {unlocked : false}]},
+               {$set : {from : name, unlocked : true, unlockTime : moment().format("YYYY-MM-DD")}});
+  if (!Achievements.findOne({condition : achievement_condition}).unlockDist)
+    Achievements.update({condition : "achievement_condition"}, {$set : {unlockDist : unlockDist}});
 };
 
 var update = function() {
@@ -32,7 +33,8 @@ var update = function() {
 
       try {
         result = HTTP.call("GET", "https://api.fitbit.com/1/user/" + user_id + "/activities/date/" + this_update.format("YYYY-MM-DD") +".json", {headers : {"Authorization" : "Bearer " + access_token, "Accept-Language" : "en_US"}, timeout : 1000});
-      } catch (error) {
+      } 
+      catch (error) {
         console.log("Error, failed to retrieve Daily Activity Summary for " + this_update.format("YYYY-MM-DD") + ". Cancelling all further updates until next attempt.");
         console.log(error);
         return; // don't try the rest of the updates, or else we risk skipping an update.
@@ -149,20 +151,20 @@ var update = function() {
   }
 
   /**************************** UNLOCK ACHIEVEMENTS **************************/
-  var total_miles = Stats.findOne({name : "total miles"}).value;
-  var longest_streak = Stats.findOne({name : "longest streak"}).value;
+  var tm = Stats.findOne({name : "total miles"}).value;
+  var ls = Stats.findOne({name : "longest streak"}).value;
 
   // UNLOCK CONDITION CODES
-  if (total_miles >= 1)    unlock("1mi",    "Teddy");
-  if (total_miles >= 6)    unlock("6mi",    "Vaibhav");
-  if (total_miles >= 13.1) unlock("13.1mi", "Name4");
-  if (total_miles >= 20.1) unlock("20.1mi",   "Name5");
-  if (total_miles >= 26.2) unlock("26.2mi", "Name6");
-  if (total_miles >= 40)   unlock("40mi",   "Name7");
-  if (total_miles >= 50)   unlock("50mi",   "Name8");
-  if (total_miles >= 70)   unlock("70mi", "Name8");
-  if (longest_streak >= 5)  unlock("5w", "Name9");
-  if (longest_streak >= 10) unlock("10w", "Name10");
+  if (tm >= 1)    unlock("1 mile",    "Teddy");
+  if (tm >= 6)    unlock("6 miles",    "Vaibhav");
+  if (tm >= 13.1) unlock("13.1 miles", "Name4");
+  if (tm >= 20.1) unlock("20.1 miles",   "Name5");
+  if (tm >= 26.2) unlock("26.2 miles", "Name6");
+  if (tm >= 40)   unlock("40 miles",   "Name7");
+  if (tm >= 50)   unlock("50 miles",   "Name8");
+  if (tm >= 70)   unlock("70 miles", "Name8");
+  if (ls >= 5)  unlock("5w streak", "Name9", tm);
+  if (ls >= 10) unlock("10w streak", "Name10", tm);
 }
 
 Meteor.startup(function () {
@@ -183,16 +185,16 @@ Meteor.startup(function () {
   if (Achievements.find().count() === 0) {
     console.log("Initializing Achievements database");
     // For streak achievements, leave unlockDist : null and set when unlocked.
-    Achievements.insert({index : 0, from : null, description : "1st mile!",                    iconImg : "first.png",     condition : "1 mile",     unlocked : false, unlockTime : null, unlockDist : 1,    hidden : false});
-    Achievements.insert({index : 1, from : null, description : "You've got mail!",             iconImg : "mail.png",      condition : "6 miles",    unlocked : false, unlockTime : null, unlockDist : 6,    hidden : false});
-    Achievements.insert({index : 2, from : null, description : "Half marathon.",               iconImg : "brolicarm.png", condition : "13.1 miles", unlocked : false, unlockTime : null, unlockDist : 13.1, hidden : false});
-    Achievements.insert({index : 3, from : null, description : "The LoL Queen don't ff @ 20.", iconImg : "lolqueen.png",  condition : "20.1 miles", unlocked : false, unlockTime : null, unlockDist : 20.1,   hidden : false});
-    Achievements.insert({index : 4, from : null, description : "Nice calves.",                 iconImg : "brolicleg.png", condition : "26.2 miles", unlocked : false, unlockTime : null, unlockDist : 26.2, hidden : false});
-    Achievements.insert({index : 5, from : null, description : "You're a brick now.",          iconImg : "brick.png",     condition : "40 miles",   unlocked : false, unlockTime : null, unlockDist : 40,   hidden : false});
-    Achievements.insert({index : 6, from : null, description : "Heart goes doki doki.",        iconImg : "heart.png",     condition : "5w streak",  unlocked : false, unlockTime : null, unlockDist : null, hidden : false});
-    Achievements.insert({index : 7, from : null, description : "Absolute.",                    iconImg : "sixpack.png",   condition : "50 miles",   unlocked : false, unlockTime : null, unlockDist : 50,   hidden : false});
-    Achievements.insert({index : 8, from : null, description : "Good bread.",                  iconImg : "bread.png",     condition : "70 miles",   unlocked : false, unlockTime : null, unlockDist : 70,   hidden : false});
-    Achievements.insert({index : 9, from : null, description : "NICE CALVES.",                 iconImg : "broliccalf.png",condition : "10w streak", unlocked : false, unlockTime : null, unlockDist : null,   hidden : false});
+    Achievements.insert({index : 0, from : null, description : "1st mile!",                    iconImg : "first.png",     condition : "1 mile",     condition_short: "1mi",  unlocked : false, unlockTime : null, unlockDist : 1,    hidden : false});
+    Achievements.insert({index : 1, from : null, description : "You've got mail!",             iconImg : "mail.png",      condition : "6 miles",    condition_short: "6mi",  unlocked : false, unlockTime : null, unlockDist : 6,    hidden : false});
+    Achievements.insert({index : 2, from : null, description : "Half marathon.",               iconImg : "brolicarm.png", condition : "13.1 miles", condition_short: "13mi", unlocked : false, unlockTime : null, unlockDist : 13.1, hidden : false});
+    Achievements.insert({index : 3, from : null, description : "The LoL Queen don't ff @ 20.", iconImg : "lolqueen.png",  condition : "20.1 miles", condition_short: "20mi", unlocked : false, unlockTime : null, unlockDist : 20.1, hidden : false});
+    Achievements.insert({index : 4, from : null, description : "Nice calves.",                 iconImg : "brolicleg.png", condition : "26.2 miles", condition_short: "26mi", unlocked : false, unlockTime : null, unlockDist : 26.2, hidden : false});
+    Achievements.insert({index : 5, from : null, description : "You're a brick now.",          iconImg : "brick.png",     condition : "40 miles",   condition_short: "40mi", unlocked : false, unlockTime : null, unlockDist : 40,   hidden : false});
+    Achievements.insert({index : 6, from : null, description : "Absolute.",                    iconImg : "sixpack.png",   condition : "50 miles",   condition_short: "50mi", unlocked : false, unlockTime : null, unlockDist : 50,   hidden : false});
+    Achievements.insert({index : 7, from : null, description : "Good bread.",                  iconImg : "bread.png",     condition : "70 miles",   condition_short: "70mi", unlocked : false, unlockTime : null, unlockDist : 70,   hidden : false});
+    Achievements.insert({index : 8, from : null, description : "Heart goes doki doki.",        iconImg : "heart.png",     condition : "5w streak",  condition_short: "5ws",  unlocked : false, unlockTime : null, unlockDist : null, hidden : false});
+    Achievements.insert({index : 9, from : null, description : "NICE CALVES.",                 iconImg : "broliccalf.png",condition : "10w streak", condition_short: "10ws", unlocked : false, unlockTime : null, unlockDist : null, hidden : false});
   }
   // Initialize Authorization
   if (Authorization.find().count() === 0) {
@@ -201,7 +203,6 @@ Meteor.startup(function () {
     Authorization.insert({name : "refresh token", value : ""});
     Authorization.insert({name : "user id", value : "3XP9MQ"});
   }
-  
   // Update is only called during Startup because Heroku process restarts it periodically.
   var last_update = moment(Stats.findOne({name : "last update"}).value);
   var duration = moment.duration(moment().diff(last_update));
@@ -209,5 +210,13 @@ Meteor.startup(function () {
   if (duration.asDays() > 2) {
     update();
   }
-//  Meteor.setInterval(update(), 86400000);
+//  Meteor.setInterval(function() {
+//    // Update is only called during Startup because Heroku process restarts it periodically.
+//    var last_update = moment(Stats.findOne({name : "last update"}).value);
+//    var duration = moment.duration(moment().diff(last_update));
+//    console.log("Last update: " + last_update + ". " + duration.asDays() + " days ago.");
+//    if (duration.asDays() > 2) {
+//      update();
+//    }
+//  }, 60000);
 });

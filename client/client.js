@@ -1,7 +1,7 @@
 // CLIENT-SIDE
 if (Meteor.isClient) {
   
-  Meteor.subscribe("stats", function() {
+  Meteor.subscribe("statsDB", function() {
     Session.set("loaded", true);
 //    var TM = Stats.findOne({name : "total miles"}).value;
     var TM = 20; // testing Total Miles amount
@@ -66,14 +66,13 @@ if (Meteor.isClient) {
   });
   
   Template.body.helpers({
-    
     loaded : function() {
       return Session.get("loaded");
 //      return false;
     },
     
-    achievements : function() { 
-      return Achievements.find({}, {sort : {index : 1}});
+    roadAchievements : function() { 
+      return Achievements.find({unlockDist : {$ne : null}}, {sort : {unlockDist : 1}});
     },
     
     achClass : function(index) {
@@ -99,8 +98,11 @@ if (Meteor.isClient) {
     // Animation Frame
     spriteFrame : function() {
       return "background-image: url('" + FRAMES[Session.get("Sprite Frame")] + "');";
-    }
+    },
     
+    achievements : function() {
+      return Achievements.find({}, {sort : {index : 1}});
+    }
   });
   
   Template.weekmarker.helpers({

@@ -33,7 +33,7 @@ body {
   line-height: 14px;
   padding: 10px;
   width: 100%;
-  max-width: 300px;
+  max-width: 250px;
 }
 
 ::-webkit-scrollbar { 
@@ -43,6 +43,10 @@ body {
 @media screen and (min-width: 0px) and (max-width: 600px) {
   #main {
     width: 100%;
+  }
+  
+  .road-achievement-condition {
+    visibility: visible;
   }
   
   #sprite {
@@ -62,6 +66,10 @@ body {
   #main {
     width: 60%;
     width: calc(100% - 250px);
+  }
+  
+  .road-achievement-condition {
+    visibility: hidden;
   }
   
   #sprite {
@@ -118,20 +126,30 @@ body {
 
 .achievement-right {
   background-size: 50px 50px;
+  background-repeat: no-repeat;
+  background-position: left top;
   margin-left: 100px;
+  padding-top: 52px;
   position: absolute;
   left: 0;
   height: 50px;
   width: 50px;
+  line-height: 14px;
+  text-align: center;
 }
 
 .achievement-left {
   background-size: 50px 50px;
+  background-repeat: no-repeat;
+  background-position: right top;
   margin-left: -70px;
+  padding-top: 52px;
   position: absolute;
   left: 0;
   height: 50px;
   width: 50px;
+  line-height:14px;
+  text-align: center;
 }
 
 #weekmarkers {
@@ -233,7 +251,7 @@ body {
   width: 100%;
   max-width: 400px;
   font-size: 10px;
-  line-height: 16px;
+  line-height: 18px;
 }
 
 
@@ -253,20 +271,30 @@ body {
 }
 
 #sidebar .title {
+  height: 60px;
   font-size: 24px;
   font-weight: 500;
-  padding: 20px 15px 15px 15px;
-  position: relative;
+  padding: 15px 15px 15px 15px;
+  position: fixed;
+  top: 0;
+}
+
+#sidebar #scrolling {
+  position: absolute;
+  overflow: scroll;
+  top: 60px;
+  bottom: 0px;
+  width: 100%;
 }
 
 ul {
-  margin: 0;
+  margin: -10px 0 0 0;
   padding: 0;
 }
 
 li {
   font-size: 14px;
-  opacity: 0.5;
+  opacity: 0.3;
   position: relative;
   list-style: none;
   padding: 10px 15px;

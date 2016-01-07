@@ -21,11 +21,18 @@ setInterval(incrementDots, 500);
 
 
 var messages = [
+  "Lacing trainers...",
+  "Resisting going back to sleep...",
   "Calibrating Fitbit...",
   "Thinking of Shia LeBouf...",
+  "TONY used BLESS UP!",
+  "It's super effective!",
+  "Obtaining the key to more success...",
   "Pliometrics...",
-  "Blessing up...",
-  "Looking for more loading messages..."
+  "Thinking of more loading messages...",
+  "I never thought it'd get this far...",
+  "Uh...",
+  "<span style='font-family: sans-serif'>( ͡° ͜ʖ ͡°)</span>"
 ];
 var messageIndex = 0;
 var incrementMessage = function() {
