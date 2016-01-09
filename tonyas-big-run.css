@@ -324,6 +324,10 @@ li {
   min-height: 50px;
 }
 
+li:hover {
+  opacity: 1;
+}
+
 li .info {
   margin-left: 10px;
   width: 160px;

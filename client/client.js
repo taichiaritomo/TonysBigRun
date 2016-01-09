@@ -11,7 +11,8 @@ if (Meteor.isClient) {
     var NRH = Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX), // null road height
         STM = NRH + TM*MILE_PX + BOTTOM_OFFSET - WH;
     console.log("STM=" + STM);
-    window.scrollTo(0, STM); // scroll to current position
+    window.scrollTo(0, STM + 0.001); // scroll to current position +0.001 to avoid scrollsaving
+//    window.scrollTo(0, 0);
     // week scale
     weeklyMiles = Stats.findOne({name : "weekly miles"}).value;
     var l = weeklyMiles.length;

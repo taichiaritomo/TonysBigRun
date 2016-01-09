@@ -52,10 +52,10 @@ var update = function() {
           // Streak processing for previous week
           if (weekly_miles[week] >= weekly_quota) { // Quota met
             current_streak = current_streak + 1;
-            weekly_quota = Math.min(weekly_quota + 1, 10);
+//            weekly_quota = Math.min(weekly_quota + 1, 10); // for increasing quotas
           } else { // Quota not met
             current_streak = 0;
-            weekly_quota = 6;
+//            weekly_quota = 6; // for increasing quota
           }
           day_of_the_week = 0; // Reset to Monday
           week = week + 1; // start new week
@@ -76,7 +76,7 @@ var update = function() {
         Stats.update({name : "day of the week"}, {$set : {value : day_of_the_week}});
         Stats.update({name : "week"},            {$set : {value : week}});
         Stats.update({name : "weekly miles"}, {$set : {value : weekly_miles}});
-        Stats.update({name : "weekly quota"},    {$set : {value : weekly_quota}});
+//        Stats.update({name : "weekly quota"},    {$set : {value : weekly_quota}});
         Stats.update({name : "current streak"},  {$set : {value : current_streak}});
         // Successful update
         last_update = this_update;
@@ -155,16 +155,21 @@ var update = function() {
   var ls = Stats.findOne({name : "longest streak"}).value;
 
   // UNLOCK CONDITION CODES
-  if (tm >= 1)    unlock("1 mile",    "Teddy");
-  if (tm >= 6)    unlock("6 miles",    "Vaibhav");
-  if (tm >= 13.1) unlock("13.1 miles", "Name4");
-  if (tm >= 20.1) unlock("20.1 miles",   "Name5");
-  if (tm >= 26.2) unlock("26.2 miles", "Name6");
-  if (tm >= 40)   unlock("40 miles",   "Name7");
-  if (tm >= 50)   unlock("50 miles",   "Name8");
-  if (tm >= 70)   unlock("70 miles", "Name8");
-  if (ls >= 5)  unlock("5w streak", "Name9", tm);
-  if (ls >= 10) unlock("10w streak", "Name10", tm);
+  if (tm >= 0)    unlock("30 seconds", "Vaibhav");
+  if (tm >= 1)    unlock("1 mile",     "Teddy");
+  if (tm >= 6)    unlock("6 miles",    "Danny");
+  if (tm >= 13.1) unlock("13.1 miles", "Tae");
+  if (tm >= 20.1) unlock("20.1 miles", "Eriko");
+  if (tm >= 26.2) unlock("26.2 miles", "Larry");
+  if (tm >= 40)   unlock("40 miles",   "Taichi");
+  if (tm >= 50)   unlock("50 miles",   "Christine");
+  if (tm >= 75)   unlock("75 miles",   "Name8"); // UNASSIGNED
+  if (tm >= 100)  unlock("100 miles",  "Name");  // UNASSIGNED
+  if (tm >= 125)  unlock("125 miles",  "Yuki");  // UNASSIGNED
+  if (tm >= 150)  unlock("150 miles",  "Name");  // UNASSIGNED
+  if (ls >= 5)    unlock("5w streak",  "Name9", tm);
+  if (ls >= 10)   unlock("10w streak", "Name10", tm);
+  
 }
 
 Meteor.startup(function () {
@@ -172,9 +177,9 @@ Meteor.startup(function () {
   // Initialize Stats
   if (Stats.find().count() === 0) {
     console.log("Initializing Stats database");
-    Stats.insert({name : "total miles",     value : 0,            type : "miles"});
+    Stats.insert({name : "total miles",     value : 2,            type : "miles"});
     Stats.insert({name : "week",            value : 0,            type : "weeks"});
-    Stats.insert({name : "weekly miles",    value : [0, 6, 7, 0, 0, 1, 8],       type : "array of miles"}); // production is [0,0]
+    Stats.insert({name : "weekly miles",    value : [0, 2],       type : "array of miles"}); // production is [0,0]
     Stats.insert({name : "weekly quota",    value : 6,            type : "miles"});
     Stats.insert({name : "current streak",  value : 0,            type : "weeks"});
     Stats.insert({name : "longest streak",  value : 0,            type : "weeks"});
@@ -185,22 +190,26 @@ Meteor.startup(function () {
   if (Achievements.find().count() === 0) {
     console.log("Initializing Achievements database");
     // For streak achievements, leave unlockDist : null and set when unlocked.
-    Achievements.insert({index : 0, from : null, description : "1st mile!",                    iconImg : "first.png",     condition : "1 mile",     condition_short: "1mi",  unlocked : false, unlockTime : null, unlockDist : 1,    hidden : false});
-    Achievements.insert({index : 1, from : null, description : "You've got mail!",             iconImg : "mail.png",      condition : "6 miles",    condition_short: "6mi",  unlocked : false, unlockTime : null, unlockDist : 6,    hidden : false});
-    Achievements.insert({index : 2, from : null, description : "Half marathon.",               iconImg : "brolicarm.png", condition : "13.1 miles", condition_short: "13mi", unlocked : false, unlockTime : null, unlockDist : 13.1, hidden : false});
-    Achievements.insert({index : 3, from : null, description : "The LoL Queen don't ff @ 20.", iconImg : "lolqueen.png",  condition : "20.1 miles", condition_short: "20mi", unlocked : false, unlockTime : null, unlockDist : 20.1, hidden : false});
-    Achievements.insert({index : 4, from : null, description : "Nice calves.",                 iconImg : "brolicleg.png", condition : "26.2 miles", condition_short: "26mi", unlocked : false, unlockTime : null, unlockDist : 26.2, hidden : false});
-    Achievements.insert({index : 5, from : null, description : "You're a brick now.",          iconImg : "brick.png",     condition : "40 miles",   condition_short: "40mi", unlocked : false, unlockTime : null, unlockDist : 40,   hidden : false});
-    Achievements.insert({index : 6, from : null, description : "Absolute.",                    iconImg : "sixpack.png",   condition : "50 miles",   condition_short: "50mi", unlocked : false, unlockTime : null, unlockDist : 50,   hidden : false});
-    Achievements.insert({index : 7, from : null, description : "Good bread.",                  iconImg : "bread.png",     condition : "70 miles",   condition_short: "70mi", unlocked : false, unlockTime : null, unlockDist : 70,   hidden : false});
-    Achievements.insert({index : 8, from : null, description : "Heart goes doki doki.",        iconImg : "heart.png",     condition : "5w streak",  condition_short: "5ws",  unlocked : false, unlockTime : null, unlockDist : null, hidden : false});
-    Achievements.insert({index : 9, from : null, description : "NICE CALVES.",                 iconImg : "broliccalf.png",condition : "10w streak", condition_short: "10ws", unlocked : false, unlockTime : null, unlockDist : null, hidden : false});
+    Achievements.insert({index : 0,  from : null, description : "1st mile!",                    iconImg : "first.png",      condition : "1 mile",     condition_short: "1mi",  unlocked : false, unlockTime : null, unlockDist : 1,    hidden : false});
+    Achievements.insert({index : 1,  from : null, description : "Ran 30 seconds!",              iconImg : "turd.png",       condition : "30 seconds", condition_short: "30s",  unlocked : false, unlockTime : null, unlockDist : 0.01, hidden : false});
+    Achievements.insert({index : 2,  from : null, description : "You've got mail!",             iconImg : "mail.png",       condition : "6 miles",    condition_short: "6mi",  unlocked : false, unlockTime : null, unlockDist : 6,    hidden : false});
+    Achievements.insert({index : 3,  from : null, description : "Half marathon.",               iconImg : "brolicarm.png",  condition : "13.1 miles", condition_short: "13mi", unlocked : false, unlockTime : null, unlockDist : 13.1, hidden : false});
+    Achievements.insert({index : 4,  from : null, description : "The LoL Queen don't ff @ 20.", iconImg : "lolqueen.png",   condition : "20.1 miles", condition_short: "20mi", unlocked : false, unlockTime : null, unlockDist : 20.1, hidden : false});
+    Achievements.insert({index : 5,  from : null, description : "Nice calves.",                 iconImg : "brolicleg.png",  condition : "26.2 miles", condition_short: "26mi", unlocked : false, unlockTime : null, unlockDist : 26.2, hidden : false});
+    Achievements.insert({index : 6,  from : null, description : "You're a brick now.",          iconImg : "brick.png",      condition : "40 miles",   condition_short: "40mi", unlocked : false, unlockTime : null, unlockDist : 40,   hidden : false});
+    Achievements.insert({index : 7,  from : null, description : "Absolute.",                    iconImg : "sixpack.png",    condition : "50 miles",   condition_short: "50mi", unlocked : false, unlockTime : null, unlockDist : 50,   hidden : false});
+    Achievements.insert({index : 8,  from : null, description : "Good bread.",                  iconImg : "bread.png",      condition : "75 miles",   condition_short: "75mi", unlocked : false, unlockTime : null, unlockDist : 75,   hidden : false});
+    Achievements.insert({index : 9,  from : null, description : "Never not time to fast.",      iconImg : "sonic.png",      condition : "100 miles",  condition_short: "100mi",unlocked : false, unlockTime : null, unlockDist : 100,  hidden : false});
+    Achievements.insert({index : 10, from : null, description : "Big in Japan.",                iconImg : "fan.png",        condition : "125 miles",  condition_short: "125mi",unlocked : false, unlockTime : null, unlockDist : 125,  hidden : false});
+    Achievements.insert({index : 11, from : null, description : "What're those!",               iconImg : "shoe.png",       condition : "150 miles",  condition_short: "150mi",unlocked : false, unlockTime : null, unlockDist : 150,  hidden : false});
+    Achievements.insert({index : 12, from : null, description : "Heart goes doki doki.",        iconImg : "heart.png",      condition : "5w streak",  condition_short: "5ws",  unlocked : false, unlockTime : null, unlockDist : null, hidden : false});
+    Achievements.insert({index : 13, from : null, description : "NICE CALVES.",                 iconImg : "broliccalf.png", condition : "10w streak", condition_short: "10ws", unlocked : false, unlockTime : null, unlockDist : null, hidden : false});
   }
   // Initialize Authorization
   if (Authorization.find().count() === 0) {
     console.log("Initializing Authorization Data");
     Authorization.insert({name : "authorization code", value : ""});
-    Authorization.insert({name : "refresh token", value : ""});
+    Authorization.insert({name : "refresh token", value : "75a6e1141ee20e1a3a4c3018a3fc89126d9054045b4992f28b861144ec08f38b"});
     Authorization.insert({name : "user id", value : "3XP9MQ"});
   }
   // Update is only called during Startup because Heroku process restarts it periodically.
