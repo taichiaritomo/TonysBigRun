@@ -316,6 +316,7 @@ ul {
 }
 
 li {
+  cursor: default;
   font-size: 14px;
   opacity: 0.3;
   position: relative;

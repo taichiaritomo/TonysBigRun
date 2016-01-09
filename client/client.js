@@ -4,11 +4,11 @@ if (Meteor.isClient) {
   Meteor.subscribe("statsDB", function() { // run once stats db is ready
     Session.set("loaded", true);
     var TM = Stats.findOne({name : "total miles"}).value;
-//    var TM = 20; // testing Total Miles amount
+//    var TM = 1; // testing Total Miles amount
     Session.set("Total Miles", TM); // testing Total Miles quantity
     var WH = $(window).height();
-    Session.set("Null Road Height", Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX));
-    var NRH = Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX), // null road height
+    Session.set("Null Road Height", Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - (TM * MILE_PX)/2));
+    var NRH = Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - (TM * MILE_PX)/2), // null road height
         STM = NRH + TM*MILE_PX + BOTTOM_OFFSET - WH;
     console.log("STM=" + STM);
     window.scrollTo(0, STM + 0.001); // scroll to current position +0.001 to avoid scrollsaving
@@ -47,7 +47,7 @@ if (Meteor.isClient) {
       var VP = verticalPosition(),
           TM = Session.get("Total Miles"),
           WH = $(window).height(),
-          NRH = Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX), // null road height
+          NRH = Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - (TM * MILE_PX)/2), // null road height
           STM = NRH + TM*MILE_PX + BOTTOM_OFFSET - WH;
 //      console.log("Vertical position: " + VP);
 //      console.log("Scrolling total miles: " + STM);
@@ -78,7 +78,7 @@ if (Meteor.isClient) {
     $(window).resize(function() {
       var WH = $(window).height();
       var TM = Session.get("Total Miles");
-      Session.set("Null Road Height", Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX));
+      Session.set("Null Road Height", Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - (TM * MILE_PX)/2));
     });
   });
   
