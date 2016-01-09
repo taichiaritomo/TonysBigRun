@@ -1,10 +1,10 @@
 // CLIENT-SIDE
 if (Meteor.isClient) {
   
-  Meteor.subscribe("statsDB", function() {
+  Meteor.subscribe("statsDB", function() { // run once stats db is ready
     Session.set("loaded", true);
-//    var TM = Stats.findOne({name : "total miles"}).value;
-    var TM = 20; // testing Total Miles amount
+    var TM = Stats.findOne({name : "total miles"}).value;
+//    var TM = 20; // testing Total Miles amount
     Session.set("Total Miles", TM); // testing Total Miles quantity
     var WH = $(window).height();
     Session.set("Null Road Height", Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - TM * MILE_PX));
@@ -12,6 +12,19 @@ if (Meteor.isClient) {
         STM = NRH + TM*MILE_PX + BOTTOM_OFFSET - WH;
     console.log("STM=" + STM);
     window.scrollTo(0, STM); // scroll to current position
+    // week scale
+    weeklyMiles = Stats.findOne({name : "weekly miles"}).value;
+    var l = weeklyMiles.length;
+    $('#weekmarkers-content').append("<div class='weekmarker' style='margin-top: " + (NRH - 12) + "px'>W1</div>");
+    var uncountedDistance = 0; // skipped weekly mileages because they were too small to display
+    for (var i = 2; i < l; i++) {
+      if (weeklyMiles[i - 1] < 1) {
+        uncountedDistance += weeklyMiles[i - 1];
+      } else {
+        $('#weekmarkers-content').append("<div class='weekmarker' style='margin-top: " + ((weeklyMiles[i - 1] + uncountedDistance)*MILE_PX - 12) + "px'>W" + i + "</div>");
+        uncountedDistance = 0;
+      }
+    }
   });
   Meteor.subscribe("achievements");
   
@@ -56,6 +69,9 @@ if (Meteor.isClient) {
       } else {
         clearSpriteFrame(); // Immediately cancel animation once sprite reaches current point
       }
+      
+      // slide week scale correspondingly
+      $("#weekmarkers-content").css("top", (-1 * VP) + "px");
     });
     
     $(window).resize(function() {

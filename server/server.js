@@ -12,7 +12,7 @@ var unlock = function(achievement_condition, name, unlockDist) {
   Achievements.update({$and : [{condition : achievement_condition}, {unlocked : false}]},
                {$set : {from : name, unlocked : true, unlockTime : moment().format("YYYY-MM-DD")}});
   if (!Achievements.findOne({condition : achievement_condition}).unlockDist)
-    Achievements.update({condition : "achievement_condition"}, {$set : {unlockDist : unlockDist}});
+    Achievements.update({condition : achievement_condition}, {$set : {unlockDist : unlockDist}});
 };
 
 var update = function() {
@@ -174,7 +174,7 @@ Meteor.startup(function () {
     console.log("Initializing Stats database");
     Stats.insert({name : "total miles",     value : 0,            type : "miles"});
     Stats.insert({name : "week",            value : 0,            type : "weeks"});
-    Stats.insert({name : "weekly miles",    value : [0, 0],       type : "array of miles"});
+    Stats.insert({name : "weekly miles",    value : [0, 6, 7, 0, 0, 1, 8],       type : "array of miles"}); // production is [0,0]
     Stats.insert({name : "weekly quota",    value : 6,            type : "miles"});
     Stats.insert({name : "current streak",  value : 0,            type : "weeks"});
     Stats.insert({name : "longest streak",  value : 0,            type : "weeks"});
@@ -211,7 +211,6 @@ Meteor.startup(function () {
     update();
   }
 //  Meteor.setInterval(function() {
-//    // Update is only called during Startup because Heroku process restarts it periodically.
 //    var last_update = moment(Stats.findOne({name : "last update"}).value);
 //    var duration = moment.duration(moment().diff(last_update));
 //    console.log("Last update: " + last_update + ". " + duration.asDays() + " days ago.");
