@@ -180,7 +180,7 @@ Meteor.startup(function () {
     Stats.insert({name : "total miles",     value : 2,            type : "miles"});
     Stats.insert({name : "week",            value : 0,            type : "weeks"});
     Stats.insert({name : "weekly miles",    value : [0, 2],       type : "array of miles"}); // production is [0,0]
-    Stats.insert({name : "weekly quota",    value : 6,            type : "miles"});
+    Stats.insert({name : "weekly quota",    value : 7,            type : "miles"});
     Stats.insert({name : "current streak",  value : 0,            type : "weeks"});
     Stats.insert({name : "longest streak",  value : 0,            type : "weeks"});
     Stats.insert({name : "day of the week", value : 0,            type : "integer"}); // 0 = Monday ... 6 = Sunday
@@ -209,7 +209,7 @@ Meteor.startup(function () {
   if (Authorization.find().count() === 0) {
     console.log("Initializing Authorization Data");
     Authorization.insert({name : "authorization code", value : ""});
-    Authorization.insert({name : "refresh token", value : "75a6e1141ee20e1a3a4c3018a3fc89126d9054045b4992f28b861144ec08f38b"});
+    Authorization.insert({name : "refresh token", value : ""});
     Authorization.insert({name : "user id", value : "3XP9MQ"});
   }
   // Update is only called during Startup because Heroku process restarts it periodically.

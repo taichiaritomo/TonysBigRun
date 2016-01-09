@@ -16,7 +16,7 @@ if (Meteor.isClient) {
     // week scale
     weeklyMiles = Stats.findOne({name : "weekly miles"}).value;
     var l = weeklyMiles.length;
-    $('#weekmarkers-content').append("<div class='weekmarker' style='margin-top: " + (NRH - 12) + "px'>W1</div>");
+    $('#weekmarkers-content').append("<div class='weekmarker' style='margin-top: " + (-12) + "px'>W1</div>");
     var uncountedDistance = 0; // skipped weekly mileages because they were too small to display
     for (var i = 2; i < l; i++) {
       if (weeklyMiles[i - 1] < 1) {
@@ -72,7 +72,7 @@ if (Meteor.isClient) {
       }
       
       // slide week scale correspondingly
-      $("#weekmarkers-content").css("top", (-1 * VP) + "px");
+      $("#weekmarkers-content").css("margin-top", (-1 * VP + NRH) + "px");
     });
     
     $(window).resize(function() {
