@@ -6,8 +6,8 @@ body {
   min-height: 100%;
   font-family: 'Press Start 2P', sans-serif;
   background-repeat: no-repeat;
-  background-image: #6595ff;
-  background-image: linear-gradient(to bottom, #6595ff 0%, #d2e2ff 100%);
+/*  background-image: #6595ff;*/
+/*  background-image: linear-gradient(to bottom, #6595ff 0%, #d2e2ff 100%);*/
 /*  background-image: linear-gradient(to bottom, #ff8f80, #fad4c7 100%);*/
   padding: 0;
   margin: 0;
@@ -15,8 +15,7 @@ body {
   font-size: 10px;
 }
 
-#bg {
-  background-image: #333333;
+#background-gradient {
   position: fixed;
   width: 100vw;
   height: 140vh;

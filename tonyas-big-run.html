@@ -13,8 +13,6 @@
 </head>
 
 <body>
-  <div id="bg"></div>
-  
   <div id="loading" style="{{#if loaded}}display: none{{/if}}">
     <div id="loading-dialog">
       Loading<span id="loading-dots"></span><br><br>
@@ -22,6 +20,7 @@
     </div>
   </div>
   
+  <div id="background-gradient" class="{{sky}}"></div>
   
   <div id="main" style="visibility: hidden; {{#if loaded}}visibility: visible;{{/if}}">
     <!-- dynamically sized -->

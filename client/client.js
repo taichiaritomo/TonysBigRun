@@ -75,7 +75,7 @@ if (Meteor.isClient) {
       $("#weekmarkers-content").css("margin-top", (-1 * VP + NRH) + "px");
       
       // slide sky bg by percentage of document traversed
-//      $("#bg").css("top", ((-VP / ($(document).height() - WH))*40) + "vh");
+      $("#background-gradient").css("top", ((-VP / ($(document).height() - WH))*40) + "vh");
     });
     
     $(window).resize(function() {
@@ -83,9 +83,56 @@ if (Meteor.isClient) {
       var TM = Session.get("Total Miles");
       Session.set("Null Road Height", Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - (TM * MILE_PX)/2));
     });
+    
+    // TIME-BASED GRADIENTS
+    var BGs = ["night", "dawn", "day", "dusk"];
+    var changeSky = function(i) {
+      Session.set("sky", BGs[i]);
+    }
+    var NYC = SunCalc.getTimes(new Date(), 40.7127, -74.0059);
+    var sunriseStart = moment(NYC.sunrise).subtract(30, "minutes");
+    var sunriseEnd   = moment(NYC.sunrise).add(30, "minutes");
+    var sunsetStart  = moment(NYC.sunset).subtract(30, "minutes");
+    var sunsetEnd    = moment(NYC.sunset).add(30, "minutes");
+    var bgIndex = 0;
+    var now = moment();
+    if (now.isBefore(sunsetEnd)) {
+      bgIndex = 3;
+      setTimeout(function() {
+        bgIndex = 0;
+        changeSky(bgIndex);
+      }, moment.duration(sunsetEnd.diff(now)).asMilliseconds());
+    }
+    if (now.isBefore(sunsetStart)) {
+      bgIndex = 2;
+      setTimeout(function() {
+        bgIndex = 3;
+        changeSky(bgIndex);
+      }, moment.duration(sunsetStart.diff(now)).asMilliseconds());
+    }
+    if (now.isBefore(sunriseEnd)) {
+      bgIndex = 1;
+      setTimeout(function() {
+        bgIndex = 2;
+        changeSky(bgIndex);
+      }, moment.duration(sunriseEnd.diff(now)).asMilliseconds());
+    }
+    if (now.isBefore(sunriseStart)) {
+      bgIndex = 0;
+      setTimeout(function() {
+        bgIndex = 1;
+        changeSky(bgIndex);
+      }, moment.duration(sunriseStart.diff(now)).asMilliseconds());
+    }
+    changeSky(bgIndex);
   });
   
   Template.body.helpers({
+    sky : function() {
+      console.log(Session.get("sky"));
+      return Session.get("sky");
+    },
+    
     loaded : function() {
       return Session.get("loaded");
 //      return false;
