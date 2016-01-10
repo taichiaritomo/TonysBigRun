@@ -73,6 +73,9 @@ if (Meteor.isClient) {
       
       // slide week scale correspondingly
       $("#weekmarkers-content").css("margin-top", (-1 * VP + NRH) + "px");
+      
+      // slide sky bg by percentage of document traversed
+      $("#bg").css("top", ((-VP / ($(document).height() - WH))*40) + "vh");
     });
     
     $(window).resize(function() {

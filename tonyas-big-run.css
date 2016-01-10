@@ -5,17 +5,36 @@ html {
 body {
   min-height: 100%;
   font-family: 'Press Start 2P', sans-serif;
-/*  background-color: #315481;*/
-/*  background-attachment: fixed;*/
-/*  background-image: linear-gradient(to bottom, #87a9e0, #918e82 100%);*/
-/*  background-image: linear-gradient(to bottom, #9abdf8, #d5e3ff 100%);*/
-/*  background-repeat: no-repeat;*/
-
-  background-image: linear-gradient(to bottom, #ff8f80, #fad4c7 100%);
+  background-repeat: no-repeat;
+/*  background-image: linear-gradient(to bottom, #ff8f80, #fad4c7 100%);*/
   padding: 0;
   margin: 0;
   color: white;
   font-size: 10px;
+}
+
+#bg {
+  position: fixed;
+  width: 100vw;
+  height: 140vh;
+  top: 0vh;
+  z-index: 0;
+}
+
+.dawn {
+  background-image: linear-gradient(to bottom, #7892cc 0%, #ed8d59 80%, #fafb8b 100%);
+}
+
+.day {
+  background-image: linear-gradient(to bottom, #6595ff 0%, #d2e2ff 100%);
+}
+
+.dusk {
+  background-image: linear-gradient(to bottom, #3153a1 0%, #e9d7ff 60%, #fafb8b 100%);
+}
+
+.night {
+  background-image: linear-gradient(to bottom, #080a31 20%, #dfcbae 100%);
 }
 
 #loading {
@@ -318,7 +337,7 @@ ul {
 li {
   cursor: default;
   font-size: 14px;
-  opacity: 0.3;
+  opacity: 0.5;
   position: relative;
   list-style: none;
   padding: 10px 15px;
