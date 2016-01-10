@@ -75,7 +75,7 @@ if (Meteor.isClient) {
       $("#weekmarkers-content").css("margin-top", (-1 * VP + NRH) + "px");
       
       // slide sky bg by percentage of document traversed
-      $("#bg").css("top", ((-VP / ($(document).height() - WH))*40) + "vh");
+//      $("#bg").css("top", ((-VP / ($(document).height() - WH))*40) + "vh");
     });
     
     $(window).resize(function() {

@@ -20,7 +20,7 @@ body {
   position: fixed;
   width: 100vw;
   height: 140vh;
-  top: 0vh;
+  top: 0;
   z-index: 0;
 }
 
