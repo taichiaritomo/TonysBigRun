@@ -4,8 +4,7 @@
 <!--  <meta name="viewport" content="width=device-width, initial-scale=1">-->
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
   <meta name="description" content="Follow your boy Tony-ya on his journey to fitness!" />
-  <link rel="icon" type="image/png" href="http://tonysbig.run/favicon-32x32.png" sizes="32x32" />
-  <link rel="icon" type="image/png" href="http://tonysbig.run/favicon-16x16.png" sizes="16x16" />
+  <link rel="icon" sizes="16x16 32x32" href="/favicon.ico?v=2">
   <title>Tony's Big Run</title>
   <link href='https://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
@@ -29,7 +28,7 @@
     <div id="activesection" style="position: relative">
       <div id="road">
         {{#each roadAchievements}}
-          <div class="{{achClass @index}}" style="{{achPosition this.unlockDist}} opacity: 0.5; {{#if this.unlocked}}opacity: 1;{{/if}} background-image: url('icons/{{this.iconImg}}')">
+          <div class="{{achClass @index}}" style="{{achPosition this.unlockDist}} opacity: 0.7; {{#if this.unlocked}}opacity: 1;{{/if}} background-image: url('icons/{{this.iconImg}}')">
             <span class="road-achievement-condition">{{this.condition_short}}<br></span>
 <!--            {{#if this.from}}{{this.from}}{{/if}}-->
           </div>
@@ -62,7 +61,7 @@
           friends...what they are and who they're from, he must run to find out!
           <br><br><br>
           <span style="color: #CCCCCC;">
-            Powered by Fitbit and Meteor
+            Powered by Fitbit API and Meteor
             <br><br>
             Designed and built by Lawrence Wu, Taichi Aritomo, and TaeHyun Park
             for their dear friend Tony Sheng.
