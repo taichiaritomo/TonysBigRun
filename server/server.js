@@ -219,6 +219,11 @@ Meteor.startup(function () {
   if (duration.asDays() > 2) {
     update();
   }
+  Meteor.setInterval(function() {
+    if (moment().hour() >= 9) {
+      HTTP.get("http://tonysbigrun.herokuapp.com");
+    }
+  }, 300000);
 //  Meteor.setInterval(function() {
 //    var last_update = moment(Stats.findOne({name : "last update"}).value);
 //    var duration = moment.duration(moment().diff(last_update));

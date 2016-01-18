@@ -14,7 +14,7 @@ if (Meteor.isClient) {
     window.scrollTo(0, STM + 0.001); // scroll to current position +0.001 to avoid scrollsaving
 //    window.scrollTo(0, 0);
     // week scale
-    weeklyMiles = Stats.findOne({name : "weekly miles"}).value;
+    var weeklyMiles = Stats.findOne({name : "weekly miles"}).value;
     var l = weeklyMiles.length;
     $('#weekmarkers-content').append("<div class='weekmarker' style='margin-top: " + (-12) + "px'>W1</div>");
     var uncountedDistance = 0; // skipped weekly mileages because they were too small to display
