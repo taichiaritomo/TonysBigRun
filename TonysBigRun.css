@@ -130,7 +130,7 @@ body {
 
 #nullroad::after {
   content: "";
-  background-image: url("tonyroad.png");
+  background-image: url("img/tonyroad.png");
   background-size: 80px 200px;
   background-position: bottom;
   background-repeat: repeat-y;
@@ -148,7 +148,7 @@ body {
   margin: 0 auto;
   width: 80px;
   height: 3900px;
-  background-image: url("tonyroad.png");
+  background-image: url("img/tonyroad.png");
   background-size: 80px 200px;
   background-repeat: repeat-y;
 }
@@ -181,6 +181,14 @@ body {
   text-align: center;
 }
 
+.popped {
+  transform: scale(1, 1);
+}
+
+.full-size {
+  transform: scale(1, 1);
+}
+
 #main .title {
   height: 100px;
   font-size: 18px;
@@ -201,7 +209,7 @@ body {
   position: fixed;
   margin-left: -14px;
   margin-top: -72px;
-  background-image: url("tony0.png");
+  background-image: url("img/tony0.png");
   background-size: 28px 72px;
   width: 28px;
   height: 72px;
@@ -240,12 +248,8 @@ body {
   text-align: right;
 }
 
-#stats .stat-desc {
-  display: none;
-}
-
-#stats:hover .stat-desc {
-  display: inline;
+#stats span {
+  text-align: right;
 }
 
 #main #help-button {
