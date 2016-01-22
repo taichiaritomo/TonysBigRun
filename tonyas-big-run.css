@@ -200,11 +200,11 @@ body {
 #sprite {
   position: fixed;
   margin-left: -14px;
-  margin-top: -72px;
+  margin-top: -74px;
   background-image: url("tony0.png");
-  background-size: 28px 72px;
+  background-size: 28px 74px;
   width: 28px;
-  height: 72px;
+  height: 74px;
 }
 
 #weekmarkers-container {
