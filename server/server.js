@@ -219,6 +219,7 @@ Meteor.startup(function () {
   if (duration.asDays() > 2) {
     update();
   }
+  // GET call periodically to keep dyno from idling.
   Meteor.setInterval(function() {
     if (moment().hour() >= 9) {
       HTTP.get("http://tonysbigrun.herokuapp.com");
