@@ -26,7 +26,8 @@
   </div>
 -->
   
-  <div id="background-gradient"></div>
+  <div id="background-gradient">
+  </div>
   
 <!--  <div id="main" style="visibility: hidden; {{#if loaded}}visibility: visible;{{/if}}">-->
   <div id="main">
@@ -52,12 +53,11 @@
     </div>
     <div id="sprite"></div>
     <div id="weekmarkers-container">
-      <div id="weekmarkers-content">
-      </div>
+      <div id="weekmarkers-content"></div>
     </div>
     <div id="stats">
-      <span id="total-miles"></span> <br>
-      <span id="current-streak"></span>
+      <span class="label">Distance: </span><span class="stat" id="total-miles"></span> <br>
+      <span class="label">Streak: </span><span class="stat" id="current-streak"></span>
     </div>
     <div id="help-button">?</div>
     <div id="help-close">×</div>
@@ -65,14 +65,12 @@
       <div id="help-dialog">
         <p>
           Follow your boy Tony-ya on his journey to fitness. As he runs and earns
-          achievements, he'll unlock secret personal gifts from old and new 
-          friends...what they are and who they're from, he must run to find out!
-          <br><br><br>
-          <span style="color: #CCCCCC;">
-            Powered by Fitbit API and Meteor
-            <br><br>
-            Designed and built by Lawrence Wu, Taichi Aritomo, and TaeHyun Park
-            for their dear friend Tony Sheng.
+          achievements, he'll unlock <span class="unicorn">secret gifts</span> 
+          from old and new friends...what they are and who they're from, he must 
+          run to find out!
+          <br><br>
+          <span style="color: #acacac;">
+            Powered by Fitbit API and Meteor<br><br> Built by Taichi Aritomo
           </span>
         </p>
       </div>

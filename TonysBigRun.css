@@ -35,8 +35,22 @@ body {
   background-image: linear-gradient(to bottom, #3153a1 0%, #e9d7ff 60%, #fafb8b 100%);
 }
 
+.dusk2 {
+  background-image: linear-gradient(to bottom, #3153a1 0%, #d6bbf7 60%, #e3c385 100%);
+}
+
 .night {
   background-image: linear-gradient(to bottom, #080a31 20%, #dfcbae 100%);
+}
+
+.star {
+/*
+  background: url("img/star.gif");
+  background-size: 18px 18px;
+*/
+  height: 18px;
+  width: 18px;
+  position: absolute;
 }
 
 #loading {
@@ -87,7 +101,37 @@ body {
   }
 }
 
-@media screen and (min-width: 601px) {
+@media screen and (min-width: 601px) and (max-width: 767px) {
+  #main {
+    width: 60%;
+    width: calc(100% - 260px);
+  }
+  
+  .road-achievement-condition {
+    visibility: hidden;
+  }
+  
+  #sprite {
+    left: 30%;
+    left: -webkit-calc(50% - 130px);
+    left: -moz-calc(50% - 130px);
+    left: calc(50% - 130px);
+  }
+  
+  #weekmarkers-container {
+    right: 260px;
+  }
+  
+  #stats {
+    right: 270px;
+  }
+  
+  #sidebar {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 768px) {
   #main {
     width: 60%;
     width: calc(100% - 250px);
@@ -105,11 +149,11 @@ body {
   }
   
   #weekmarkers-container {
-    right: 250px;
+    right: 260px;
   }
   
   #stats {
-    right: 260px;
+    right: 270px;
   }
   
   #sidebar {
@@ -223,8 +267,9 @@ body {
   height: 100vh;
   width: 30px;
   -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
-          color-stop(0.00,  rgba(0,0,0,1)),
-          color-stop(0.15,  rgba(0,0,0,1)),
+          color-stop(0.0,  rgba(0,0,0,0)),
+          color-stop(0.1,  rgba(0,0,0,1)),
+          color-stop(0.2,  rgba(0,0,0,1)),
           color-stop(0.8,  rgba(0,0,0,1)),
           color-stop(0.9,  rgba(0,0,0,0)),
           color-stop(1.00,  rgba(0,0,0,0)));}
@@ -248,8 +293,8 @@ body {
   text-align: right;
 }
 
-#stats span {
-  text-align: right;
+#stats .stat {
+  float: right;
 }
 
 #main #help-button {
@@ -277,7 +322,7 @@ body {
   display:flex;
   justify-content:center;
   align-items:center;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.6);
   width: 100%;
   height: 100%;
   position: fixed;
@@ -295,24 +340,28 @@ body {
 }
 
 #main #help-dialog {
-  padding: 10px;
+  background: rgba(0,0,0,0.8);
+  color: #f7f7f7;
+  padding: 20px;
   width: 100%;
   max-width: 400px;
   font-size: 10px;
   line-height: 18px;
 }
 
-
+#help-dialog p {
+  margin:0;
+}
 
 #sidebar {
-  box-shadow: -2px 0px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.4);
   color: #333333;
   font-family: 'Fredoka One', sans-serif;
   position: fixed;
   right: 0;
   top: 0;
-  width: 250px;
-  margin: 0 auto;
+  width: 260px;
+/*  margin: 0 auto;*/
   overflow: scroll;
   height: 100%;
   background: rgba(255,255,255,0.8);
@@ -322,7 +371,7 @@ body {
   height: 60px;
   font-size: 24px;
   font-weight: 500;
-  padding: 15px 15px 15px 15px;
+  padding: 15px 20px 15px 20px;
   position: fixed;
   top: 0;
 }
@@ -346,7 +395,7 @@ li {
   opacity: 0.5;
   position: relative;
   list-style: none;
-  padding: 10px 15px;
+  padding: 10px 20px 7px 20px;
   min-height: 50px;
 }
 

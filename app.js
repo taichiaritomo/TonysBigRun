@@ -48,47 +48,48 @@ var ACHIEVEMENTS = [
 
 
 /********************** TIME-BASED GRADIENT BACKGROUND *******************/
-var BGs = ["night", "dawn", "day", "dusk"];
+var BGs = ["dusk2", "dawn", "day", "dusk"];
 var changeSky = function(i) {
   $("#background-gradient").removeClass();
   $("#background-gradient").addClass(BGs[i]);
 }
-var NYC = SunCalc.getTimes(new Date(), 40.7127, -74.0059);
-var sunriseStart = moment(NYC.sunrise).subtract(30, "minutes");
-var sunriseEnd   = moment(NYC.sunrise).add(30, "minutes");
-var sunsetStart  = moment(NYC.sunset).subtract(30, "minutes");
-var sunsetEnd    = moment(NYC.sunset).add(30, "minutes");
-var bgIndex = 0;
-var now = moment();
-if (now.isBefore(sunsetEnd)) {
-  bgIndex = 3;
-  setTimeout(function() {
-    bgIndex = 0;
-    changeSky(bgIndex);
-  }, moment.duration(sunsetEnd.diff(now)).asMilliseconds());
-}
-if (now.isBefore(sunsetStart)) {
-  bgIndex = 2;
-  setTimeout(function() {
-    bgIndex = 3;
-    changeSky(bgIndex);
-  }, moment.duration(sunsetStart.diff(now)).asMilliseconds());
-}
-if (now.isBefore(sunriseEnd)) {
-  bgIndex = 1;
-  setTimeout(function() {
-    bgIndex = 2;
-    changeSky(bgIndex);
-  }, moment.duration(sunriseEnd.diff(now)).asMilliseconds());
-}
-if (now.isBefore(sunriseStart)) {
-  bgIndex = 0;
-  setTimeout(function() {
-    bgIndex = 1;
-    changeSky(bgIndex);
-  }, moment.duration(sunriseStart.diff(now)).asMilliseconds());
-}
-changeSky(bgIndex);
+changeSky(0);
+//var NYC = SunCalc.getTimes(new Date(), 40.7127, -74.0059);
+//var sunriseStart = moment(NYC.sunrise).subtract(30, "minutes");
+//var sunriseEnd   = moment(NYC.sunrise).add(30, "minutes");
+//var sunsetStart  = moment(NYC.sunset).subtract(30, "minutes");
+//var sunsetEnd    = moment(NYC.sunset).add(30, "minutes");
+//var bgIndex = 0;
+//var now = moment();
+//if (now.isBefore(sunsetEnd)) {
+//  bgIndex = 3;
+//  setTimeout(function() {
+//    bgIndex = 0;
+//    changeSky(bgIndex);
+//  }, moment.duration(sunsetEnd.diff(now)).asMilliseconds());
+//}
+//if (now.isBefore(sunsetStart)) {
+//  bgIndex = 2;
+//  setTimeout(function() {
+//    bgIndex = 3;
+//    changeSky(bgIndex);
+//  }, moment.duration(sunsetStart.diff(now)).asMilliseconds());
+//}
+//if (now.isBefore(sunriseEnd)) {
+//  bgIndex = 1;
+//  setTimeout(function() {
+//    bgIndex = 2;
+//    changeSky(bgIndex);
+//  }, moment.duration(sunriseEnd.diff(now)).asMilliseconds());
+//}
+//if (now.isBefore(sunriseStart)) {
+//  bgIndex = 0;
+//  setTimeout(function() {
+//    bgIndex = 1;
+//    changeSky(bgIndex);
+//  }, moment.duration(sunriseStart.diff(now)).asMilliseconds());
+//}
+//changeSky(bgIndex);
 
 
 /****************************** LOADING SCREEN ***************************/
@@ -127,6 +128,7 @@ changeSky(bgIndex);
 /********************************* PAGE SETUP ********************************/
 
 var WH = $(window).height(),
+    WW = $(window).width(),
     NRH = Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - (TM * MILE_PX)/2), // null road height
     STM = NRH + TM*MILE_PX + BOTTOM_OFFSET - WH;
 $("#nullroad").css("height", NRH);
@@ -235,22 +237,70 @@ window.scrollTo(0, STM + 0.001); // scroll to current position on load
 
 $(window).resize(function() {
   WH = $(window).height();
+  WW = $(window).width();
   NRH = Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - (TM * MILE_PX)/2);
   $("#nullroad").css("height", NRH);
 });
+
+// BACKGROUND TWINKLE TWINKLE LITTLE STARS
+var stars = [];
+var bgHeight = $("#background-gradient").height();
+var starIndex = 0;
+var twinkleYellow = setInterval(function() {
+  if (!stars[starIndex]) {
+    stars[starIndex] = $("<img class='star'/>");
+    $("#background-gradient").append(stars[starIndex]);
+  }
+  var starX = Math.random()*WW - 4;
+  var starY = Math.random()*1.4*WH - 4;
+  var star = stars[starIndex];
+  star.attr("src", "");
+  star.attr("src", "img/star"+starIndex+".gif");
+  star.css({left: starX, top: starY});
+  starIndex = (starIndex + 1)%3;
+}, 300);
+
+// UNICORN TEXT EFFECT
+var step = 4, // colorChage step, use negative value to change direction
+    ms   = 10,  // loop every
+    $uni = $('.unicorn'),
+    txt  = $uni.text(),
+    len  = txt.length,
+    lev  = 360/len,
+    newCont = "",
+    itv;
+
+for(var i=0; i<len; i++)newCont += "<span style='color:hsla("+ i*lev +", 100%, 50%, 1)'>"+ txt.charAt(i) +"</span>";
+
+$uni.html(newCont); // Replace with new content
+var $ch = $uni.find('span'); // character
+
+function anim(){
+  itv = setInterval(function(){
+    $ch.each(function(){
+      var h = +$(this).attr('style').split(',')[0].split('(')[1]-step % 360;
+      $(this).attr({style:"color:hsla("+ h +", 100%, 50%, 1)"});
+    });
+  }, ms); 
+}
+function stop(){ clearInterval(itv); }
+
+//$uni.hover(anim,stop);
 
 
 /******************************** HELP SCREEN ********************************/
 
 $('#help-button').click(function() {
-  $(this).css('bottom', '-50px');
+  anim();
+  $('#help-button').css('bottom', '-50px');
   $('#help-close').css('bottom', '10px');
   $('#help-screen').removeClass('hidden');
   $('#version').css('opacity', '0.5');
 });
 
-$('#help-close').click(function() {
-  $(this).css('bottom', '-50px');
+$('#help-close, #help-screen').click(function() {
+  stop();
+  $('#help-close').css('bottom', '-50px');
   $('#help-button').css('bottom', '10px');
   $('#help-screen').addClass('hidden');
   $('#version').css('opacity', '0');
