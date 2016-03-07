@@ -250,7 +250,8 @@ window.scrollTo(0, STM + 0.001); // scroll to current position on load
 $(window).resize(function() {
   WH = $(window).height();
   WW = $(window).width();
-  NRH = Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - (TM * MILE_PX)/2);
+  NRH = Math.max(TOP_OFFSET, WH - BOTTOM_OFFSET - (TM * MILE_PX)/2),
+  STM = NRH + TM*MILE_PX + BOTTOM_OFFSET - WH;
   $("#nullroad").css("height", NRH);
 });
 
