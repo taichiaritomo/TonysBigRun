@@ -159,12 +159,16 @@ for (var i = 0; i < l; i++) {
   $("#road").append(
     "<div class='" + (i % 2 == 0 ? "achievement-right" : "achievement-left") +
     "' style='" + "top: " + (a.unlockDist ? a.unlockDist * MILE_PX - 25 : -5000) + "px; " +
-    "opacity: " + (a.unlocked ? 1 : 0.7) + "; " +
+    "opacity: " + (a.unlocked ? 1 : 0.5) + "; " +
     "background-image: url(&quot;img/icons/" + a.iconImg + "&quot;);'>" +
-    "<span class=-road-achievement-condition'>" + a.condition_short + "<br></span>" + 
+    "<span class='road-achievement-condition'>" + a.condition_short + "<br></span>" + 
     "</div>"
   );
 }
+
+// Road "here" (current milesage) marker layout
+$("#road").append("<div id='here'></div>");
+$("#here").css("top", TM*MILE_PX);
 
 // Sidebar Achievements layout
 var l = ACHIEVEMENTS.length;
@@ -203,6 +207,8 @@ var clearSpriteFrame = function() {
   $("#sprite").css("background-image", "url('img/" + FRAMES[spriteFrame] + "')");
 };
 
+var lastVP = 0;
+
 // Scroll events, including sprite animation and movement.
 $(window).scroll(function() {
   var VP = verticalPosition();
@@ -217,7 +223,11 @@ $(window).scroll(function() {
     clearTimeout(resetTimer);
     resetTimer = setTimeout(clearSpriteFrame, 250);
     if (animationTimer == null) {
-      spriteFrame = (spriteFrame+1)%4;
+      if (VP >= lastVP) {
+        spriteFrame = (spriteFrame+1)%4;
+      } else {
+        spriteFrame = (spriteFrame+4-1)%4;
+      }
       $("#sprite").css("background-image", "url('img/" + FRAMES[spriteFrame] + "')");
       animationTimer = setTimeout(function() { animationTimer = null; }, 250);
     }
@@ -230,6 +240,8 @@ $(window).scroll(function() {
 
   // slide sky bg by percentage of document traversed
   $("#background-gradient").css("top", ((-VP / ($(document).height() - WH))*40) + "vh");
+  
+  lastVP = VP;
 });
 
 

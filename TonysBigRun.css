@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 html {
   min-height: 100%;
 }
@@ -75,7 +79,7 @@ body {
     display: none; 
 }
 
-@media screen and (min-width: 0px) and (max-width: 600px) {
+@media screen and (min-width: 0px) and (max-width: 767px) {
   #main {
     width: 100%;
   }
@@ -90,6 +94,13 @@ body {
   
   #weekmarkers-container {
     right: 0;
+    -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
+          color-stop(0.0,  rgba(0,0,0,0)),
+          color-stop(0.1,  rgba(0,0,0,1)),
+          color-stop(0.2,  rgba(0,0,0,1)),
+          color-stop(0.8,  rgba(0,0,0,1)),
+          color-stop(0.9,  rgba(0,0,0,0)),
+          color-stop(1.00,  rgba(0,0,0,0)));
   }
   
   #stats {
@@ -101,36 +112,6 @@ body {
   }
 }
 
-@media screen and (min-width: 601px) and (max-width: 767px) {
-  #main {
-    width: 60%;
-    width: calc(100% - 260px);
-  }
-  
-  .road-achievement-condition {
-    visibility: hidden;
-  }
-  
-  #sprite {
-    left: 30%;
-    left: -webkit-calc(50% - 130px);
-    left: -moz-calc(50% - 130px);
-    left: calc(50% - 130px);
-  }
-  
-  #weekmarkers-container {
-    right: 260px;
-  }
-  
-  #stats {
-    right: 270px;
-  }
-  
-  #sidebar {
-    display: block;
-  }
-}
-
 @media screen and (min-width: 768px) {
   #main {
     width: 60%;
@@ -138,7 +119,7 @@ body {
   }
   
   .road-achievement-condition {
-    visibility: hidden;
+    visibility: visible;
   }
   
   #sprite {
@@ -150,10 +131,18 @@ body {
   
   #weekmarkers-container {
     right: 260px;
+    -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
+          color-stop(0.0,  rgba(0,0,0,0)),
+          color-stop(0.1,  rgba(0,0,0,1)),
+          color-stop(0.2,  rgba(0,0,0,1)),
+          color-stop(0.8,  rgba(0,0,0,1)),
+          color-stop(0.9,  rgba(0,0,0,1)),
+          color-stop(1.00,  rgba(0,0,0,0)));
   }
   
   #stats {
-    right: 270px;
+    display: none;
+/*    right: 270px;*/
   }
   
   #sidebar {
@@ -259,6 +248,14 @@ body {
   height: 74px;
 }
 
+#here {
+  background: #363c36;
+  width: 80px;
+  height: 5px;
+  margin-top: -3px;
+  position: absolute;
+}
+
 #weekmarkers-container {
 /*  background: lightblue;*/
   opacity: 0.8;
@@ -266,13 +263,8 @@ body {
   top: 0;
   height: 100vh;
   width: 30px;
-  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
-          color-stop(0.0,  rgba(0,0,0,0)),
-          color-stop(0.1,  rgba(0,0,0,1)),
-          color-stop(0.2,  rgba(0,0,0,1)),
-          color-stop(0.8,  rgba(0,0,0,1)),
-          color-stop(0.9,  rgba(0,0,0,0)),
-          color-stop(1.00,  rgba(0,0,0,0)));}
+  
+}
 
 #weekmarkers-content {
   position: relative;
@@ -368,24 +360,44 @@ body {
 }
 
 #sidebar .title {
+/*  background: rgba(255,255,255,0.2);*/
+  background-image: linear-gradient(to bottom, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
   height: 60px;
+  width: 100%;
   font-size: 24px;
   font-weight: 500;
   padding: 15px 20px 15px 20px;
   position: fixed;
+}
+
+#sidebar #achievements-title {
   top: 0;
+}
+
+#sidebar #stats-title {
+  bottom: 80px;
 }
 
 #sidebar #scrolling {
   position: absolute;
   overflow: scroll;
   top: 60px;
-  bottom: 0px;
+  bottom: 140px;
   width: 100%;
 }
 
+#sidebar #stats-box {
+  color: #333333;
+  font-size: 16px;
+  line-height: 24px;
+  position: fixed;
+  bottom: 0;
+  padding: 15px 20px 15px 20px;
+  width: 260px;
+}
+
 ul {
-  margin: -10px 0 0 0;
+  margin: 0 0 0 0;
   padding: 0;
 }
 
@@ -396,7 +408,7 @@ li {
   position: relative;
   list-style: none;
   padding: 10px 20px 7px 20px;
-  min-height: 50px;
+  min-height: 70px;
 }
 
 li:hover {
