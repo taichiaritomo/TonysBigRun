@@ -242,6 +242,11 @@ $(window).scroll(function() {
   $("#background-gradient").css("top", ((-VP / ($(document).height() - WH))*40) + "vh");
   
   lastVP = VP;
+  
+  if (VP - WH + 20 > STM)
+    $("#weekmarkers-label").css("opacity", 0);
+  else 
+    $("#weekmarkers-label").css("opacity", 0.8);
 });
 
 
